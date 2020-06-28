@@ -1,4 +1,4 @@
-package com.example.batteryalarmclock;
+package com.example.batteryalarmclock.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
 public class SplashActivity extends AppCompatActivity {

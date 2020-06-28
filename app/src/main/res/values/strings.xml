@@ -21,4 +21,11 @@
     <string name="alarm_ring">Alarm Ring</string>
     <string name="alarm_with_flashlight">Alarm with Flashlight</string>
     <string name="set_alarm">SET ALARM</string>
+    <string name="txt_plugg">Activate Alarm while charger is unplugged</string>
+    <string name="txt_message">Charger device to protect.Unplug will turn on the alarm. Exit will turn off protection</string>
+    <string name="activate_alarm">Activate Alarm</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="unlock_preium">You have unlock get all premium features!</string>
+    <string name="ok">OK</string>
+    <string name="share_app">Share this app</string>
 </resources>

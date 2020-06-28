@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/mainBg"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="@dimen/_2sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        android:layout_centerInParent="true"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:padding="@dimen/_5sdp"
+            android:background="@color/mainBg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txt_plugg"
+                android:layout_width="430dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                android:text="@string/congratulations"
+                android:textSize="@dimen/_30sdp" />
+
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/img_plugg"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_below="@+id/txt_plugg"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_gold_crown" />
+
+            <TextView
+                android:id="@+id/txt_message"
+                android:layout_below="@+id/img_plugg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                android:text="@string/unlock_preium"
+                android:textSize="@dimen/_20sdp" />
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_below="@+id/txt_message"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@drawable/ic_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/ok"
+                android:textSize="@dimen/_16sdp" />
+
+            <Button
+                android:layout_below="@+id/btn_ok"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ic_button_blue"
+                android:textSize="@dimen/_16sdp"
+                android:id="@+id/activate_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:text="@string/share_app" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

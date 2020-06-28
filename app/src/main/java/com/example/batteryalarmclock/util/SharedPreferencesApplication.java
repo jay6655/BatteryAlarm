@@ -10,6 +10,7 @@ public class SharedPreferencesApplication {
     public String GETSTARTED = "GETSTARTED";
     public String SETSLIENT = "SETSLIENT";
     public String FLASHLIGHT = "FLASHLIGHT";
+    public String SETALARMMTH = "SETALARMMTH";
 
 
     //TODO Set and Get get Started  or not
@@ -58,5 +59,20 @@ public class SharedPreferencesApplication {
             return sharedPreferences.getBoolean(FLASHLIGHT, false);
         }
         return false;
+    }
+
+    public void setAlarmMethod(Context context, String set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SETALARMMTH, set);
+        editor.apply();
+    }
+
+    public String getAlarmMethod(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(SETALARMMTH)){
+            return sharedPreferences.getString(SETALARMMTH , "SET_PERCNT");
+        }
+        return "SET_PERCNT";
     }
 }

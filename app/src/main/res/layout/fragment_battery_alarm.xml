@@ -423,6 +423,7 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/enterPer"
             android:textSize="@dimen/_16sdp"
             android:layout_alignParentEnd="true"
             android:text="90"
@@ -449,6 +450,7 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/entertime"
             android:textSize="@dimen/_16sdp"
             android:layout_alignParentEnd="true"
             android:text="5"
@@ -465,7 +467,7 @@
         android:focusable="true"
         android:background="@drawable/ic_button_bg"
         android:textSize="@dimen/_16sdp"
-        android:id="@+id/get_started"
+        android:id="@+id/set_alarm"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30sdp"
         android:layout_alignParentBottom="true"
