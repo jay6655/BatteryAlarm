@@ -77,7 +77,7 @@ public class AlarmService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .build();
-        startForeground(1, notification);
+        startForeground(2 , notification);
 
         playMusic();
 

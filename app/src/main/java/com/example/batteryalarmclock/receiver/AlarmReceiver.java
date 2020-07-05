@@ -15,8 +15,14 @@ import com.example.batteryalarmclock.model.AlarmData;
 import com.example.batteryalarmclock.service.AlarmService;
 import com.example.batteryalarmclock.service.WakeLocker;
 import com.example.batteryalarmclock.templates.Constant;
+import com.example.batteryalarmclock.templates.DBHelper;
+import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
@@ -45,9 +51,26 @@ public class AlarmReceiver  extends BroadcastReceiver {
             return;
         } else {
             WakeLocker.acquire(context);
-            if (constant.isAlarmActive) {
+           /* if (constant.isAlarmActive) {*/
                 Log.e("AlarmReceiver", "Alarm is Active onReceiver" + alarm.toString());
-                constant.isAlarmActive = false;
+                //constant.isAlarmActive = false;
+
+                new SharedPreferencesApplication().setAlarmAlwardySet(context , false);
+
+                AlarmData alarmData = new AlarmData();
+                SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+                String currentDateandTime = sdf.format(new Date());
+                alarmData.setAlarm_states("COMPLETE");
+                alarmData.setUnplagg_date_time(currentDateandTime);
+                alarmData.setUnplugg_percentage(Constant.getInstance().getCurrentBatteryStutus(context));
+                if (alarmData.getUnique_id() == 0) {
+                    new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData, true);
+                }
+                else {
+                    new DBHelper(context).updateLastUnpluggData(alarmData.getUnique_id(), alarmData, true);
+                }
+
+                Constant.lastID = 0 ;
 
                 Intent intent1 = new Intent(context, AlarmRingingActivity.class);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -59,14 +82,14 @@ public class AlarmReceiver  extends BroadcastReceiver {
 
                 constant.alarmDatabackup = alarm;
                 
-                Log.e("AlarmReceiver", "ALARM ID  IN RECEIVER : " + alarm.getId());
+                Log.e("AlarmReceiver", "ALARM ID  IN RECEIVER : " + alarm.getUnique_id());
 
                 Intent serviceIntent = new Intent(context, AlarmService.class);
                 final Bundle bundle1 = new Bundle();
                 bundle1.putParcelable("ALARM_KEY", alarm);
                 serviceIntent.putExtra("BUNDLE_EXTRA", bundle1);
                 ContextCompat.startForegroundService(context, serviceIntent);
-            } 
+            /*} */
         }
     }
 
@@ -78,7 +101,7 @@ public class AlarmReceiver  extends BroadcastReceiver {
     }
 
     private static PendingIntent launchAlarmLandingPage(Context ctx, AlarmData alarm) {
-        return PendingIntent.getActivity(ctx, alarm.getId(), launchIntent(ctx), FLAG_UPDATE_CURRENT
+        return PendingIntent.getActivity(ctx, alarm.getUnique_id(), launchIntent(ctx), FLAG_UPDATE_CURRENT
         );
     }
 
@@ -87,62 +110,33 @@ public class AlarmReceiver  extends BroadcastReceiver {
     }
 
     public static void  setAlarm(Context context, AlarmData alarm){
+        Log.e("AlarmReceiver " , " setAlarm " + alarm.toString());
         final Intent intent ;
-        if (alarm.getType().equals("time")) {
-            intent = new Intent(context, AlarmReceiver.class);
-            final Bundle bundle = new Bundle();
-            bundle.putParcelable("ALARM_KEY", alarm);
-            intent.putExtra("BUNDLE_EXTRA", bundle);
-            intent.putExtra("WHEN" , "setReminderAlarm ");
-            PendingIntent pIntent  = PendingIntent.getBroadcast(
-                    context,
-                    alarm.getId(),
-                    intent,
-                    FLAG_UPDATE_CURRENT
-            );
-            ScheduleAlarm.with(context).schedule(alarm, pIntent);
-        }
-        else {
-            intent = new Intent(context, AlarmReceiver.class);
+        intent = new Intent(context, AlarmReceiver.class);
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable("ALARM_KEY", alarm);
+        intent.putExtra("BUNDLE_EXTRA", bundle);
+        PendingIntent pIntent  = PendingIntent.getBroadcast(
+                context,
+                alarm.getUnique_id(),
+                intent,
+                FLAG_UPDATE_CURRENT
+        );
 
-            final Bundle bundle = new Bundle();
-            bundle.putParcelable("ALARM_KEY", alarm);
-            intent.putExtra("BUNDLE_EXTRA", bundle);
-            intent.putExtra("WHEN" , "setReminderAlarm ");
-            PendingIntent pIntent  = PendingIntent.getBroadcast(
-                    context,
-                    alarm.getId(),
-                    intent,
-                    FLAG_UPDATE_CURRENT
-            );
-            ScheduleAlarm.with(context).schedule(alarm, pIntent);
-        }
-        /*else {
-           *//* //Check whether the alarm is set to run on any days
-            final Calendar nextAlarmTime = getTimeForNextAlarm(alarm);
-            alarm.setTime(nextAlarmTime.getTimeInMillis());
-            intent = new Intent(context, AlarmReceiver.class);
-            final Bundle bundle = new Bundle();
-            bundle.putParcelable("ALARM_KEY", alarm);
-            intent.putExtra("BUNDLE_EXTRA", bundle);
-            intent.putExtra("WHEN", "setReminderAlarm ");
-            pIntent = PendingIntent.getBroadcast(
-                    context,
-                    alarm.getId(),
-                    intent,
-                    FLAG_UPDATE_CURRENT
-            );*//*
-        }*/
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR , alarm.getSelected_hour());
+        calendar.add(Calendar.MINUTE , alarm.getSelected_minute());
+        alarm.setAlarmTime(calendar.getTimeInMillis());
 
+        ScheduleAlarm.with(context).schedule(alarm, pIntent);
     }
 
-    public static void cancelReminderAlarm(Context context, AlarmData alarm) {
-        Log.e("DATAAA12" , " cancelReminderAlarm  "+ alarm.getId() +  " cc");
+    public static void cancelReminderAlarm(Context context, int alarm_id ) {
+        Log.e("AlarmReceiver" , " cancelReminderAlarm  "+ alarm_id +  " cc");
         final Intent intent = new Intent(context, AlarmReceiver.class);
-
         final PendingIntent pIntent = PendingIntent.getBroadcast(
                 context,
-                alarm.getId(),
+                alarm_id,
                 intent,
                 FLAG_UPDATE_CURRENT
         );
@@ -152,7 +146,6 @@ public class AlarmReceiver  extends BroadcastReceiver {
             manager.cancel(pIntent);
         }
     }
-
 
     private static class ScheduleAlarm {
 
@@ -172,57 +165,10 @@ public class AlarmReceiver  extends BroadcastReceiver {
         void schedule(AlarmData alarm, PendingIntent pi) {
             Log.e("ALARM RECEIVER " ,   " schedule  SS");
             if(SDK_INT > LOLLIPOP) {
-                am.setAlarmClock(new AlarmManager.AlarmClockInfo(alarm.getTime(), launchAlarmLandingPage(ctx, alarm)), pi);
+                am.setAlarmClock(new AlarmManager.AlarmClockInfo(alarm.getAlarm_time(), launchAlarmLandingPage(ctx, alarm)), pi);
             } else {
-                am.setExact(AlarmManager.RTC_WAKEUP, alarm.getTime(), pi);
+                am.setExact(AlarmManager.RTC_WAKEUP, alarm.getAlarm_time(), pi);
             }
         }
     }
-
-    /*private static Calendar getTimeForNextAlarm(AlarmData alarm) {
-        Log.e("Receiver " , "getTimeForNextAlarm called : ");
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(alarm.getTime());
-        final long currentTime = System.currentTimeMillis();
-        final int startIndex = getStartIndexFromTime(calendar);
-        Log.e("Receiver " , "StartInder : " + startIndex);
-        if (alarm.getDays().equalsIgnoreCase("00")) {
-            if (calendar.getTimeInMillis() > currentTime){
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-            }
-            return  calendar;
-        }
-        else {
-            int count = 0;
-            boolean isAlarmSetForDay;
-            final SparseBooleanArray daysArray = alarm.getDaysA();
-            do {
-                final int index = (startIndex + count) % 7;
-                isAlarmSetForDay =
-                        daysArray.valueAt(index) && (calendar.getTimeInMillis() > currentTime);
-                if (!isAlarmSetForDay) {
-                    calendar.add(Calendar.DAY_OF_MONTH, 1);
-                    count++;
-                }
-            } while (!isAlarmSetForDay && count < 7);
-            return calendar;
-        }
-    }*/
-
-    /*private static int getStartIndexFromTime(Calendar c) {
-        final int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        int startIndex = 0;
-        switch (dayOfWeek) {
-            case Calendar.MONDAY:
-                startIndex = 0;
-                break; case Calendar.TUESDAY: startIndex = 1;
-                break; case Calendar.WEDNESDAY: startIndex = 2;
-                break; case Calendar.THURSDAY: startIndex = 3;
-                break; case Calendar.FRIDAY: startIndex = 4;
-                break; case Calendar.SATURDAY: startIndex = 5;
-                break; case Calendar.SUNDAY: startIndex = 6;
-                break;
-        }
-        return startIndex;
-    }*/
 }

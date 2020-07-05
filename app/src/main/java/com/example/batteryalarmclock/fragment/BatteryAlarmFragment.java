@@ -1,20 +1,18 @@
 package com.example.batteryalarmclock.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,21 +27,34 @@ import androidx.fragment.app.Fragment;
 
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.activity.ActivateAlarmActivity;
+import com.example.batteryalarmclock.dialog.PerPickerCustomDialog;
+import com.example.batteryalarmclock.dialog.SettingDialog;
+import com.example.batteryalarmclock.dialog.TimePickerCustomDialog;
 import com.example.batteryalarmclock.model.AlarmData;
 import com.example.batteryalarmclock.receiver.AlarmReceiver;
 import com.example.batteryalarmclock.service.WakeLocker;
 import com.example.batteryalarmclock.templates.Constant;
+import com.example.batteryalarmclock.templates.DBHelper;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
-public class BatteryAlarmFragment extends Fragment {
+import static com.example.batteryalarmclock.dialog.PerPickerCustomDialog.selectdValue;
+import static com.example.batteryalarmclock.dialog.PerPickerCustomDialog.selectvaluedone;
+import static com.example.batteryalarmclock.dialog.TimePickerCustomDialog.selectedhour;
+import static com.example.batteryalarmclock.dialog.TimePickerCustomDialog.selectedmin;
+import static com.example.batteryalarmclock.dialog.TimePickerCustomDialog.selectvaluedonetime;
+
+public class BatteryAlarmFragment extends Fragment implements View.OnClickListener {
     View rootView ;
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
-    CameraManager cameraManager;
-    String mCameraId;
-    TextView enterPer , entertime  , current_per;
+    TextView enterPer , entertime , current_per_frg;
     ProgressBar progressBar;
+    Constant constant = Constant.getInstance();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,14 +70,16 @@ public class BatteryAlarmFragment extends Fragment {
         entertime = rootView.findViewById(R.id.entertime);
         enterPer = rootView.findViewById(R.id.enterPer);
 
-        Constant constant = Constant.getInstance();
-
-        current_per = rootView.findViewById(R.id.txt_per);
-        current_per.setText(String.valueOf(constant.getCurrentBatteryStutus(requireContext())));
+        current_per_frg = rootView.findViewById(R.id.txt_per);
+        current_per_frg.setText(String.valueOf(constant.getCurrentBatteryStutus(requireContext())));
 
         progressBar = rootView.findViewById(R.id.progressBar);
-        progressBar.setProgress((int) constant.getCurrentBatteryStutus(requireContext()));
+        progressBar.setProgress(constant.getCurrentBatteryStutus(requireContext()));
 
+        ImageView img_settings = rootView.findViewById(R.id.img_settings);
+        img_settings.setOnClickListener(this);
+
+        //TODO Alarm Slient or not
         Switch sw_slient = rootView.findViewById(R.id.sw_slient);
         sw_slient.setChecked(sh.getSlientSwich(requireContext()));
         sw_slient.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -76,8 +89,10 @@ public class BatteryAlarmFragment extends Fragment {
             }
         });
 
+        //TODO Device in flash light available or not
         setFlashLight();
 
+        //TODO Alarm play Flash light on of off
         Switch sw_flash = rootView.findViewById(R.id.sw_flash);
         sw_flash.setChecked(sh.getFlashLight(requireContext()));
         sw_flash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -88,32 +103,23 @@ public class BatteryAlarmFragment extends Fragment {
             }
         });
 
+        //TODO Which type of alarm set for per or time
         final RelativeLayout timer_view = rootView.findViewById(R.id.timer_view);
+        timer_view.setOnClickListener(this);
+
         final RelativeLayout persantage_view = rootView.findViewById(R.id.persantage_view);
-        persantage_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialogShow("per");
-            }
-        });
+        persantage_view.setOnClickListener(this);
 
-        timer_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialogShow("time");
-            }
-        });
-
+        //TODO Which type of alarm set selection
         RadioGroup alarm_button_view = rootView.findViewById(R.id.alarm_button_view);
         if (sh.getAlarmMethod(requireContext()).equalsIgnoreCase("SET_PERCNT")){
-            RadioButton radioButton = (RadioButton) rootView.findViewById(R.id.persantage);
+            RadioButton radioButton = rootView.findViewById(R.id.persantage);
             radioButton.setChecked(true);
-
             timer_view.setVisibility(View.INVISIBLE);
             persantage_view.setVisibility(View.VISIBLE);
             sh.setAlarmMethod(requireContext() , "SET_PERCNT");
         }else {
-            RadioButton radioButton = (RadioButton) rootView.findViewById(R.id.timer);
+            RadioButton radioButton = rootView.findViewById(R.id.timer);
             radioButton.setChecked(true);
 
             timer_view.setVisibility(View.VISIBLE);
@@ -136,30 +142,81 @@ public class BatteryAlarmFragment extends Fragment {
             }
         });
 
+        //TODO SET alarm function
         Button set_alarm = rootView.findViewById(R.id.set_alarm);
-        set_alarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setAlarm();
-            }
-        });
+        set_alarm.setOnClickListener(this);
+
+        NumberPicker numberPicker = new NumberPicker(requireContext());
+        PerPickerCustomDialog.setPreValueSelected(requireContext() , numberPicker);
+
+        entertime.setText(selectedmin * 5  + " min ");
+        enterPer.setText(selectdValue + " %");
+
+        new DBHelper(requireContext()).getAllAlarmData();
+
         return rootView;
     }
 
     private void setAlarm() {
-        if (sh.getAlarmMethod(requireContext()).equalsIgnoreCase("SET_PERCNT")) {
-            Intent activateAlarm = new Intent(getContext(), ActivateAlarmActivity.class);
-            activateAlarm.putExtra("SETVALUE" , enterPer.getText().toString().trim());
-            activateAlarm.putExtra("ALARMTYPE" , "SET_PERCNT");
-            startActivity(activateAlarm);
+        DBHelper dbHelper = new DBHelper(requireContext());
+        if (sh.getAlarmAlwardySet(requireContext())) {
+            Log.e("BATTERY constant.lastID" , Constant.lastID + " xx");
+            dbHelper.updateAlarmStatus("DISCARD" , Constant.lastID);
+            String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
+            Log.e("BATTERY" , set_alarm + " xx");
+            if (set_alarm.equalsIgnoreCase("PERCENTAGE")) {
+                sh.setAlarmPercentage(requireContext(), 0 );
+            }
+            else if (set_alarm.equalsIgnoreCase("TIME")){
+                AlarmReceiver.cancelReminderAlarm(requireContext() , Constant.lastID);
+            }
+            setAlarmAllData();
         }
         else {
-            final Calendar calendar = Calendar.getInstance();
-            AlarmData alarmData = new AlarmData();
-            alarmData.setId((int) calendar.getTimeInMillis());
-            alarmData.setType("time");
-            calendar.add(Calendar.MINUTE, Integer.parseInt(String.valueOf(entertime.getText())));
-            alarmData.setTime(calendar.getTimeInMillis());
+            setAlarmAllData();
+        }
+    }
+
+    private void setAlarmAllData() {
+        sh.setAlarmAlwardySet(requireContext() , true);
+
+        AlarmData alarmData = new AlarmData();
+
+        Random random = new Random();
+        int unique_id = random.nextInt(900) + 100;
+        alarmData.setUnique_id(unique_id);
+
+        SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+        String currentDateandTime = sdf.format(new Date());
+        alarmData.setCurrent_date_time(currentDateandTime);
+
+        alarmData.setCurrent_percentage(constant.getCurrentBatteryStutus(requireContext()));
+        alarmData.setAlarm_states("RUNNING");
+
+        if (sh.getAlarmMethod(requireContext()).equalsIgnoreCase("SET_PERCNT")) {
+            alarmData.setAlarm_type("PERCENTAGE");
+            alarmData.setTarget_percentage(selectdValue);
+            alarmData.setSelected_hour(0);
+            alarmData.setSelected_minute(0);
+            // TODO Alarm set for selected Percentage
+            sh.setAlarmPercentage(requireContext(), selectdValue);
+
+            WakeLocker.acquire(requireContext());
+
+            Intent activateAlarm = new Intent(getContext(), ActivateAlarmActivity.class);
+            startActivity(activateAlarm);
+        } else {
+            // TODO Alarm set for perticular time
+            alarmData.setTarget_percentage(0);
+            alarmData.setAlarm_type("TIME");
+            alarmData.setSelected_hour(selectedhour);
+            if (selectedmin == 1) {
+                alarmData.setSelected_minute(selectedmin * 5);
+            }
+            else {
+                alarmData.setSelected_minute(selectedmin);
+            }
+
             AlarmReceiver.setAlarm(getContext(), alarmData);
 
             WakeLocker.acquire(requireContext());
@@ -167,46 +224,43 @@ public class BatteryAlarmFragment extends Fragment {
             Intent activateAlarm = new Intent(getContext(), ActivateAlarmActivity.class);
             startActivity(activateAlarm);
         }
+        DBHelper dbHelper = new DBHelper(requireContext());
+        dbHelper.addAlarm(alarmData);
     }
 
     private void alertDialogShow(final String compare) {
-        LayoutInflater li = LayoutInflater.from(getContext());
-        View promptsView = li.inflate(R.layout.alert_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext() , AlertDialog.THEME_HOLO_DARK);
-        alertDialogBuilder.setView(promptsView);
-        final EditText userInput =  promptsView.findViewById(R.id.etUserInput);
-        final TextView textView1 = promptsView.findViewById(R.id.textView1);
-        if (compare.equalsIgnoreCase("time"))
-        {
-            textView1.setText("Enter Minute : ");
+        if (compare.equalsIgnoreCase("time")) {
+            TimePickerCustomDialog timePickerCustomDialog = new TimePickerCustomDialog(requireContext() );
+            timePickerCustomDialog.show();
+            timePickerCustomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    if (selectvaluedonetime) {
+                        if (selectedhour != 0 )
+                            entertime.setText(selectedhour + " h " + selectedmin + " min ");
+                        else if (selectedhour == 0 )
+                            entertime.setText(selectedmin + " min ");
+                    }
+                }
+            });
+
         }
         else {
-            textView1.setText("Enter persentage : ");
+            PerPickerCustomDialog perPickerCustomDialog = new PerPickerCustomDialog(requireContext());
+            perPickerCustomDialog.setCanceledOnTouchOutside(false);
+            perPickerCustomDialog.show();
+            perPickerCustomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    if (selectvaluedone){
+                        enterPer.setText(selectdValue + " %");
+                    }
+                    else {
+                        selectdValue = 0 ;
+                    }
+                }
+            });
         }
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // get user input and set it to result
-                       if (compare.equalsIgnoreCase("time")){
-                           entertime.setText(userInput.getText().toString().trim());
-                       }
-                       else {
-                           enterPer.setText(userInput.getText().toString().trim());
-                       }
-                    }
-                })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
     }
 
     private void setFlashLight() {
@@ -215,5 +269,23 @@ public class BatteryAlarmFragment extends Fragment {
             rootView.findViewById(R.id.flash_view).setVisibility(View.GONE);
         }
     }
-}
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.img_settings:
+                SettingDialog settingDialog = new SettingDialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen ,getActivity());
+                settingDialog.show();
+                break;
+            case R.id.set_alarm:
+                setAlarm();
+                break;
+            case R.id.persantage_view:
+                alertDialogShow("per");
+                break;
+            case R.id.timer_view:
+                alertDialogShow("time");
+                break;
+        }
+    }
+}

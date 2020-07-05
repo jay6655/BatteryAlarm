@@ -13,7 +13,7 @@ import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.model.AlarmData;
 import com.example.batteryalarmclock.receiver.AlarmReceiver;
 import com.example.batteryalarmclock.service.AlarmService;
-import com.example.batteryalarmclock.service.BatteryAlarmService;
+import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
 public class AlarmRingingActivity extends AppCompatActivity {
     AlarmData alarm ;
@@ -29,17 +29,19 @@ public class AlarmRingingActivity extends AppCompatActivity {
             Log.e("AlarmReceiver", "bundle not null");
             alarm = bundleintent.getParcelable("ALARM_KEY");
         }
+        Log.e("AlarmReceiver", "TYPE " + alarm.getAlarm_type() + " ss");
 
         Button stop_alarm = findViewById(R.id.stop_alarm);
         stop_alarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopService(new Intent(AlarmRingingActivity.this , BatteryAlarmService.class));
-                AlarmReceiver.cancelReminderAlarm(AlarmRingingActivity.this , alarm);
+                if (alarm.getAlarm_type() != null && alarm.getAlarm_type().equals("Persentage")){
+                    new SharedPreferencesApplication().setAlarmPercentage(AlarmRingingActivity.this , 0);
+                }
+                AlarmReceiver.cancelReminderAlarm(AlarmRingingActivity.this , alarm.getUnique_id());
                 stopService(new Intent(AlarmRingingActivity.this , AlarmService.class));
                 finish();
             }
         });
     }
-
 }

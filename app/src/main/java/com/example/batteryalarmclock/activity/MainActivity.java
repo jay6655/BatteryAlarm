@@ -1,7 +1,9 @@
 package com.example.batteryalarmclock.activity;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -17,9 +19,9 @@ import com.example.batteryalarmclock.service.BatteryAlarmService;
 import com.example.batteryalarmclock.templates.Constant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Calendar;
 
-    public static final String APP_TAG = "MainActivity";
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        Constant.getInstance().mContext = this;
-
-        //MainActivity.this.startService(new Intent(MainActivity.this , BatteryAlarmService.class));
+        if(!isMyServiceRunning(BatteryAlarmService.class)) {
+            MainActivity.this.startService(new Intent(MainActivity.this, BatteryAlarmService.class));
+        }
 
         defualFragmentLoad();
 
@@ -57,11 +59,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void defualFragmentLoad() {
         Fragment fragment = new BatteryAlarmFragment();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.container_fram ,fragment,"BatteryAlarm");
         ft.commit();
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

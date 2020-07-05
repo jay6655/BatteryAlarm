@@ -13,13 +13,7 @@ public class WakeLocker {
 
         PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Battery:MyWakelockTag");
-        wakeLock.acquire();
-
-        /*PowerManager pm = (PowerManager) ctx.getSystemService(POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
-                PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                PowerManager.ON_AFTER_RELEASE, MainActivity.APP_TAG);*/
-
+        wakeLock.acquire(20*60*1000L /*20 minutes*/);
     }
 
     public static void release() {

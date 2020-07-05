@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SharedPreferencesApplication {
+
     public static final String MYPREFERENCES = "MyPreference" ;
+
     public String GETSTARTED = "GETSTARTED";
     public String SETSLIENT = "SETSLIENT";
     public String FLASHLIGHT = "FLASHLIGHT";
     public String SETALARMMTH = "SETALARMMTH";
+    public String SETALARPERSENTAG ="SETALARPERSENTAG";
+    public String ALARMALWARDYSET = "ALARMALWARDYSET";
 
 
     //TODO Set and Get get Started  or not
@@ -74,5 +78,37 @@ public class SharedPreferencesApplication {
             return sharedPreferences.getString(SETALARMMTH , "SET_PERCNT");
         }
         return "SET_PERCNT";
+    }
+
+    // set and  get Alarm Persentage time
+    public void setAlarmPercentage(Context context, int set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(SETALARPERSENTAG, set);
+        editor.apply();
+    }
+
+    public int getAlarmPercentage(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(SETALARPERSENTAG)){
+            return sharedPreferences.getInt(SETALARPERSENTAG , 0);
+        }
+        return 0;
+    }
+
+    //Alarm Alwardy Set or not
+    public void setAlarmAlwardySet(Context context, boolean set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(ALARMALWARDYSET , set);
+        editor.apply();
+    }
+
+    public boolean getAlarmAlwardySet(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(ALARMALWARDYSET)) {
+            return sharedPreferences.getBoolean(ALARMALWARDYSET , false);
+        }
+        return false;
     }
 }

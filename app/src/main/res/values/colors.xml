@@ -12,4 +12,6 @@
     
     <color name="mainBg">#0E1316</color>
     <color name="grat_clr">#5D5E61</color>
+    <color name="dialog_bg">#1F1F1F</color>
+    <color name="clr_view">#C0C0C0</color>
 </resources>

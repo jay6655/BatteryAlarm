@@ -5,31 +5,23 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.example.batteryalarmclock.R;
-import com.example.batteryalarmclock.activity.ActivateAlarmActivity;
-import com.example.batteryalarmclock.model.AlarmData;
-import com.example.batteryalarmclock.receiver.AlarmReceiver;
-import com.example.batteryalarmclock.templates.Constant;
-
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import com.example.batteryalarmclock.activity.MainActivity;
+import com.example.batteryalarmclock.receiver.BatteryStatusReceiver;
+import com.example.batteryalarmclock.receiver.PowerConnctedReceiver;
 
 public class BatteryAlarmService extends Service {
 
     private static final String CHANNEL_ID = "ForegroundBatteryService";
-    private CountDownTimer countDownTimer;
 
     @Nullable
     @Override
@@ -40,23 +32,14 @@ public class BatteryAlarmService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        final String setValue = intent.getStringExtra("SETVALUE");
-        String setType = intent.getStringExtra("ALARMTYPE");
-
         createNotificationChannel();
 
-        Intent notificationIntent = new Intent(this, ActivateAlarmActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        notificationIntent.putExtra("SETVALUE" , setValue);
-        notificationIntent.putExtra("ALARMTYPE" , setType);
-
+        Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -66,30 +49,19 @@ public class BatteryAlarmService extends Service {
                 .build();
         startForeground(1, notification);
 
-        countDownTimer = new CountDownTimer(1000000000 , 7000) {
-            @Override
-            public void onTick(long l) {
-                Log.e("Coundtime tmerunninf " , TimeUnit.MILLISECONDS.toMinutes(l) + " ");
-                int value = Constant.getInstance().getCurrentBatteryStutus(getApplicationContext());
+        //Power Connected or not receiver register
+        PowerConnctedReceiver powerConnctedReceiver = new PowerConnctedReceiver();
+        IntentFilter filter = new IntentFilter();
+        for (String action: PowerConnctedReceiver.POWER_ACTIONS) {
+            filter.addAction(action);
+        }
+        registerReceiver(powerConnctedReceiver , filter);
 
-                if (setValue != null && value == Integer.parseInt(setValue)) {
-                    Log.e("Conditiuon true" , value + " ");
-                    onFinish();
-
-                    Calendar calendar = Calendar.getInstance();
-                    AlarmData alarmData = new AlarmData();
-                    alarmData.setId((int) calendar.getTimeInMillis() + 1 );
-                    alarmData.setType("percentage");
-                    alarmData.setTime(calendar.getTimeInMillis());
-                    AlarmReceiver.setAlarm(getApplicationContext(), alarmData);
-                }
-            }
-
-            @Override
-            public void onFinish() { }
-        };
-
-        countDownTimer.start();
+        //Battery status receiver register
+        BatteryStatusReceiver batteryStatusReceiver = new BatteryStatusReceiver();
+        IntentFilter filter_new = new IntentFilter();
+        filter_new.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(batteryStatusReceiver , filter_new);
 
         return START_STICKY;
     }
@@ -117,8 +89,5 @@ public class BatteryAlarmService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
     }
 }
