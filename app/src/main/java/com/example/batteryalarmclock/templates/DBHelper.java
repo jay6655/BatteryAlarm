@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 
 import com.example.batteryalarmclock.model.AlarmData;
+import com.example.batteryalarmclock.model.IntruderData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private String UNPLUGG_DATE_TIME = "UNPLUGG_DATE_TIME";
     private String UNPLUGG_PERCENTAGE = "UNPLUGG_PERCENTAGE";
     private String ALARM_STATUS = "ALARM_STATUS";
+
+    // Contacts table name
+    public static final String TABLE_INTRUDER = "intruderdata";
+    // Contacts Table Columns names
+    public static final String INTRUDER_ID = "_id";
+    public static final String INTRUDER_DATE = "intruder_date";
+    public static final String INTRUDER_TIME = "intruder_time";
+    public static final String INTRUDER_IMAGE_PATH = "intruder_image_path";
 
     private Constant constant = Constant.getInstance();
 
@@ -54,8 +63,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 + ALARM_TYPE + " TEXT "
                 +")";
 
+        String CREATE_INTRUDER_TABLE = "CREATE TABLE "
+                + TABLE_INTRUDER + "("
+                + INTRUDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + INTRUDER_DATE + " TEXT ,"
+                + INTRUDER_TIME + " TEXT ,"
+                + INTRUDER_IMAGE_PATH + " TEXT "
+                +")";
 
         db.execSQL(CREATE_ALARM_TABLE);
+        db.execSQL(CREATE_INTRUDER_TABLE);
     }
 
     @Override
@@ -83,11 +100,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(SELECTED_MINUTE,alarmData.getSelected_minute());
         cv.put(ALARM_STATUS ,  alarmData.getAlarm_states());
         cv.put(ALARM_TYPE ,  alarmData.getAlarm_type());
-
-        /*cv.put(UNPLUGG_DATE_TIME,alarmData.getUnplagg_date_time());
-        cv.put(UNPLUGG_PERCENTAGE,alarmData.getUnplugg_percentage());
-        cv.put(ALARM_STATUS,alarmData.getAlarm_states());
-        cv.put(ALARM_TYPE , alarmData.getAlarm_type());*/
 
         long rowInsrted =  db.insert(TABLE_NAME,null, cv);
         constant.lastID = alarmData.getUnique_id() ;
@@ -204,261 +216,53 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null && !cursor.isClosed())
                 cursor.close();
         }
-
         return alarmDataList;
     }
 
-    /*public List<AlarmData> getAlarmList() {
-        List<AlarmData> alarmDataList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "select * from "+TABLE_NAME +" ORDER BY "  + KEY_HOUR + " ASC " +"," + KEY_MINUTE + " ASC " ;
-        Cursor cursor = db.rawQuery(query,null);
-        try {
+    // Adding new contact
+    public void addIntruderData(IntruderData intruder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(INTRUDER_DATE, intruder.getIntruder_date());
+        values.put(INTRUDER_TIME, intruder.getIntruder_time());
+        values.put(INTRUDER_IMAGE_PATH, intruder.getIntruder_path());
+        // Inserting Row
+        db.insert(TABLE_INTRUDER, null, values);
+    }
+
+    // Getting All Patterns
+    public List<IntruderData> getAllInruderdata() {
+        List<IntruderData> intruderDataList = new ArrayList<IntruderData>();
+        Cursor cursor;
+        String selectQuery = "SELECT  * FROM " + TABLE_INTRUDER + " ORDER BY "+ INTRUDER_ID +" DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        cursor = db.rawQuery(selectQuery, null);
+        try{
             if (cursor.moveToFirst()) {
                 do {
-                    AlarmData alarmData = new AlarmData(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
-
-                    alarmData.setAlarmType(cursor.getInt(cursor.getColumnIndex(KEY_TYPE)));
-                    alarmData.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
-                    alarmData.setHour(cursor.getInt(cursor.getColumnIndex(KEY_HOUR)));
-                    alarmData.setMinute(cursor.getInt(cursor.getColumnIndex(KEY_MINUTE)));
-                    alarmData.setDays(cursor.getString(cursor.getColumnIndex(KEY_DAYS)));
-                    alarmData.setMissionName(cursor.getString(cursor.getColumnIndex(KEY_MISSION_NAME)));
-                    alarmData.setMissionValue(cursor.getInt(cursor.getColumnIndex(KEY_MISSION_VALUE)));
-                    alarmData.setSoundName(cursor.getString(cursor.getColumnIndex(KEY_SOUND)));
-                    alarmData.setSoundPath(cursor.getInt(cursor.getColumnIndex(KEY_SOUND_PATH)));
-                    alarmData.setVolumn(cursor.getInt(cursor.getColumnIndex(KEY_VOLUMN)));
-                    alarmData.setIsVibrate(cursor.getInt(cursor.getColumnIndex(KEY_ISVIBRATE)));
-                    alarmData.setLabel(cursor.getString(cursor.getColumnIndex(KEY_LABEL)));
-                    alarmData.setCurrent_time(cursor.getString(cursor.getColumnIndex(CURRENT_TIME)));
-                    alarmData.setAddtime(cursor.getInt(cursor.getColumnIndex(ADD_TIME)));
-                    alarmData.setIsRandomMisison(cursor.getInt(cursor.getColumnIndex(RANDOMMISSION)));
-                    alarmData.setIsEnable(cursor.getInt(cursor.getColumnIndex(KEY_ISENABLE)));
-                    alarmData.setSnoozeDuration(cursor.getLong(cursor.getColumnIndex(SNOOZEDURATION)));
-                    alarmData.setNextalarmtime(cursor.getLong(cursor.getColumnIndex(NEXTALARMTIME)));
-
-
-                    final boolean mon = cursor.getInt(cursor.getColumnIndex(COL_MON)) == 1;
-                    final boolean tues = cursor.getInt(cursor.getColumnIndex(COL_TUES)) == 1;
-                    final boolean wed = cursor.getInt(cursor.getColumnIndex(COL_WED)) == 1;
-                    final boolean thurs = cursor.getInt(cursor.getColumnIndex(COL_THURS)) == 1;
-                    final boolean fri = cursor.getInt(cursor.getColumnIndex(COL_FRI)) == 1;
-                    final boolean sat = cursor.getInt(cursor.getColumnIndex(COL_SAT)) == 1;
-                    final boolean sun = cursor.getInt(cursor.getColumnIndex(COL_SUN)) == 1;
-
-                    alarmData.setDayA(AlarmData.MON, mon);
-                    alarmData.setDayA(AlarmData.TUES, tues);
-                    alarmData.setDayA(AlarmData.WED, wed);
-                    alarmData.setDayA(AlarmData.THURS, thurs);
-                    alarmData.setDayA(AlarmData.FRI, fri);
-                    alarmData.setDayA(AlarmData.SAT, sat);
-                    alarmData.setDayA(AlarmData.SUN, sun);
-
-                    alarmData.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));
-
-                    alarmDataList.add(alarmData);
-
+                    IntruderData intruderData = new IntruderData();
+                    intruderData.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(INTRUDER_ID))));
+                    intruderData.setIntruder_date(cursor.getString(cursor.getColumnIndex(INTRUDER_DATE)));
+                    intruderData.setIntruder_time(cursor.getString(cursor.getColumnIndex(INTRUDER_TIME)));
+                    intruderData.setIntruder_path(cursor.getString(cursor.getColumnIndex(INTRUDER_IMAGE_PATH)));
+                    // Adding contact to list
+                    intruderDataList.add(intruderData);
                 } while (cursor.moveToNext());
             }
-        }
-        finally {
-            if (cursor != null && !cursor.isClosed())
+            // return contact list
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
                 cursor.close();
+            }
         }
-        return alarmDataList;
+        // looping through all rows and adding to list
+        return intruderDataList;
     }
 
-    public int updateNote(AlarmData alarmData ) {
-
+    public void closeDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-
-        cv.put(KEY_TYPE,alarmData.getAlarmType()); // quick  -- 0   standard  -- 1
-        cv.put(KEY_HOUR,alarmData.getHour()); //
-        cv.put(KEY_MINUTE,alarmData.getMinute()); //
-        cv.put(KEY_DAYS,alarmData.getDays()); //  00
-        cv.put(KEY_MISSION_NAME,alarmData.getMissionName());  // quick -- None
-        cv.put(KEY_MISSION_VALUE,alarmData.getMissionValue()); // quick  -- 0
-        cv.put(KEY_SOUND,alarmData.getSoundName()); // quick  = ""
-        cv.put(KEY_SOUND_PATH,alarmData.getSoundPath()); // quick  -- sound ID
-        cv.put(KEY_VOLUMN,alarmData.getVolumn()); // yes -- 15 no  --0
-        cv.put(KEY_ISVIBRATE,alarmData.getIsVibrate()); // on -- 1  off -- 0
-        cv.put(KEY_LABEL,alarmData.getLabel()); // quick -- None
-        cv.put(KEY_ISENABLE,alarmData.getIsEnable()); // quick  -- 1
-        cv.put(CURRENT_TIME , alarmData.getCurrentTime());
-        cv.put(ADD_TIME , alarmData.getAddedTime());
-        cv.put(RANDOMMISSION , alarmData.getIsRandomMisison());
-        cv.put(SNOOZEDURATION , alarmData.getSnoozeDuration());
-        cv.put(NEXTALARMTIME , alarmData.getNextalarmtime());
-        // cv.put(MAXTAPSNOOZEBTN , alarmData.getMaxtapsnooze());
-
-        final SparseBooleanArray days = alarmData.getDaysA();
-        cv.put(COL_MON, days.get(AlarmData.MON) ? 1 : 0);
-        cv.put(COL_TUES, days.get(AlarmData.TUES) ? 1 : 0);
-        cv.put(COL_WED, days.get(AlarmData.WED) ? 1 : 0);
-        cv.put(COL_THURS, days.get(AlarmData.THURS) ? 1 : 0);
-        cv.put(COL_FRI, days.get(AlarmData.FRI) ? 1 : 0);
-        cv.put(COL_SAT, days.get(AlarmData.SAT) ? 1 : 0);
-        cv.put(COL_SUN, days.get(AlarmData.SUN) ? 1 : 0);
-        cv.put(KEY_TIME,alarmData.getTime());
-
-        // updating row
-        return db.update(TABLE_NAME, cv, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarmData.getId())});
-    }
-
-    public void deleteNote(AlarmData  alarmData) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarmData.getId())});
         db.close();
     }
-
-    public String[] getSoundName(String valueOf) {
-        Log.e("ALARMSNOOEID" , valueOf + " sound id getSoundName");
-        Cursor cursor = null;
-        String[] empName = new String[15];
-
-        SQLiteDatabase db= this.getReadableDatabase();
-        try {
-            cursor = db.rawQuery(" SELECT * FROM  "+ TABLE_NAME +"  WHERE ID = ? ", new String[]{valueOf});
-            if (cursor.moveToFirst()){
-                do {
-                    empName[0] = (String.valueOf(cursor.getString(cursor.getColumnIndex(KEY_MISSION_NAME))));
-                    empName[1] = (String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_SOUND_PATH))));
-                    empName[2] = (String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_VOLUMN))));
-                    empName[3] = (String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_ISVIBRATE))));
-                    empName[4] = (String.valueOf(cursor.getString(cursor.getColumnIndex(KEY_LABEL))));
-                    empName[5] = (String.valueOf(cursor.getString(cursor.getColumnIndex(KEY_MISSION_VALUE))));
-
-                    // Log.e("MISSIONVAL", "Mission Value is : " + String.valueOf(cursor.getString(cursor.getColumnIndex(KEY_MISSION_VALUE))));
-                    //  empName[5] = (String.valueOf(cursor.getInt(cursor.getColumnIndex(MAXTAPSNOOZEBTN)))) ;
-                    Log.e("Snooze" , empName[2] + " dd ");
-                }while (cursor.moveToNext());
-            }
-        }
-        finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-            db.close();
-        }
-        return empName;
-    }
-
-    //Update Single Alarm Value From  List screen for enable or disable Alarm
-    public void updateEnableDisable(int val, int alarmID) {
-        Log.e("DATAAA12","updateEnableDisable alarmID : " +alarmID + " val : " + val );
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_ISENABLE,val);
-
-        // updating row
-        db.update(TABLE_NAME, cv, KEY_ID + " = ?", new String[]{String.valueOf(alarmID)});
-    }
-
-    //Update Next Alarm time
-    public void updatNextAlarmTime(long val , int alarmID) {
-        Log.e("Snooze ","updatNextAlarmTime  DONE :  --  " + alarmID );
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(NEXTALARMTIME , val);
-
-        // updating row
-        db.update(TABLE_NAME, cv, KEY_ID + " = ?", new String[]{String.valueOf(alarmID)});
-    }
-
-    public ArrayList<Long> getNextAlarmTime() {
-        Cursor cursor  = null;
-        ArrayList<Long> nextAlarm = new ArrayList<>();
-
-        SQLiteDatabase db= this.getReadableDatabase();
-
-        String query =" SELECT " + NEXTALARMTIME + " FROM  "+ TABLE_NAME + " WHERE  " + NEXTALARMTIME  + "  <>  0  " +  " ORDER BY "  + NEXTALARMTIME + " ASC ";
-        try {
-            cursor = db.rawQuery(query , null);
-            if (cursor.moveToFirst()){
-                do {
-                    nextAlarm.add(cursor.getLong(cursor.getColumnIndex(NEXTALARMTIME)));
-                }while (cursor.moveToNext());
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-            db.close();
-        }
-
-
-        return nextAlarm;
-    }
-
-    // Apply Query for Upate All standard  List Value Using Vacation mode
-    public int updateAllStandardAlarm(int val, int alarmType) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_ISENABLE,val);
-        cv.put(SNOOZEDURATION,0);
-        // updating row
-        return db.update(TABLE_NAME, cv, KEY_TYPE + " = ?",
-                new String[]{String.valueOf(alarmType)});
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
-
-    // Apply Query for Update Snooze Duration
-    public int updateSnoozeDuration(long val, int alarmID) {
-        Log.e("Snooze ","updateSnoozeDuration  DONE :  --  " + alarmID );
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(SNOOZEDURATION,val);
-
-        // updating row
-        return db.update(TABLE_NAME, cv, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarmID)});
-    }
-
-    public int updateMaxTapSnooze(long val, int alarmID) {
-        Log.e("Snooze ","updateMaxTapSnooze  DONE :  --  " + alarmID );
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        // cv.put(MAXTAPSNOOZEBTN,val);
-
-        // updating row
-        return db.update(TABLE_NAME, cv, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarmID)});
-    }
-
-    public  List<Integer>  getQuickID(){
-        List<Integer> integerList =  new ArrayList<>();
-        Cursor cursor = null;
-        String[] empName = new String[15];
-
-        SQLiteDatabase db= this.getReadableDatabase();
-        try {
-            cursor = db.rawQuery(" SELECT ID FROM  "+ TABLE_NAME +"  WHERE TYPE = ? ", new String[]{"0"});
-            if (cursor.moveToFirst()){
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndex(KEY_ID));
-                    integerList.add(id);
-
-                    Log.e("ALARMSERVICECRASH","ID FROM DATABASE CALLED : " + integerList);
-                }while (cursor.moveToNext());
-            }
-        }
-        finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-            db.close();
-        }
-        return integerList;
-    }*/
 }

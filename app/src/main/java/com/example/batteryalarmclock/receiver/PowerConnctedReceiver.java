@@ -6,6 +6,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,7 +22,9 @@ import com.example.batteryalarmclock.model.AlarmData;
 import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.templates.DBHelper;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
+import com.example.lockscreen.EnterPinActivity;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +33,7 @@ import java.util.Objects;
 
 public class PowerConnctedReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "DISCONNECTEDCHANNEL";
+    Constant constant = Constant.getInstance();
 
     DBHelper dbHelper;
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
@@ -42,6 +48,7 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
         if (intent != null) {
             if (Objects.requireNonNull(intent.getAction()).equals(Intent.ACTION_POWER_CONNECTED)) {
                 Log.e("RECEIVER " , "CONNECTED " + Constant.lastID);
+                constant.isCableConnected = true;
                 Toast.makeText(context, " CONNECTED ", Toast.LENGTH_SHORT).show();
                 String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
                 if (sh.getAlarmAlwardySet(context)){
@@ -81,6 +88,7 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
             }
             else if (Objects.requireNonNull(intent.getAction()).equals(Intent.ACTION_POWER_DISCONNECTED)) {
                 Log.e("RECEIVER " , "DISCONNECTED");
+                constant.isCableConnected = false;
                 Toast.makeText(context, " DISCONNECTED  ", Toast.LENGTH_SHORT).show();
                 String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
                 if (Constant.lastID != 0 ) {
@@ -96,9 +104,21 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
                         SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
                         String currentDateandTime = sdf.format(new Date());
                         alarmData.setUnplagg_date_time(currentDateandTime);
-                        alarmData.setUnplugg_percentage(Constant.getInstance().getCurrentBatteryStutus(context));
+                        alarmData.setUnplugg_percentage(constant.getCurrentBatteryStutus(context));
                         new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData , false);
                     }
+                }
+                if (constant.isSetTherftAlarm){
+                    
+                    constant.mp = MediaPlayer.create(context , R.raw.siren);
+                    constant.mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    constant.mp.setVolume(15 , 15);
+                    constant.mp.setLooping(true);
+                    constant.mp.start();
+
+                    Intent intentEnter = new Intent(context , EnterPinActivity.class);
+                    intentEnter.putExtra("WHEN_CALL" , "TherftAlarm");
+                    context.startActivity(intentEnter);
                 }
             }
         }

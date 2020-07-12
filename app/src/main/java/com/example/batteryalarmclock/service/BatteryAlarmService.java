@@ -10,12 +10,14 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.activity.MainActivity;
+import com.example.batteryalarmclock.model.IntruderData;
 import com.example.batteryalarmclock.receiver.BatteryStatusReceiver;
 import com.example.batteryalarmclock.receiver.PowerConnctedReceiver;
 
@@ -61,6 +63,7 @@ public class BatteryAlarmService extends Service {
         BatteryStatusReceiver batteryStatusReceiver = new BatteryStatusReceiver();
         IntentFilter filter_new = new IntentFilter();
         filter_new.addAction(Intent.ACTION_BATTERY_CHANGED);
+        filter_new.addAction(Intent.ACTION_BATTERY_OKAY);
         registerReceiver(batteryStatusReceiver , filter_new);
 
         return START_STICKY;

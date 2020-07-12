@@ -4,12 +4,19 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.ListView;
 
 import com.example.batteryalarmclock.R;
+import com.example.batteryalarmclock.adapter.IntruderAdapter;
+import com.example.batteryalarmclock.model.IntruderData;
+import com.example.batteryalarmclock.templates.DBHelper;
+
+import java.util.List;
 
 public class IntruderLogDialog extends Dialog {
     private Context context;
     private Activity activity;
+    private List<IntruderData> intruderData;
 
     public IntruderLogDialog(Context context, int themeResId, Activity activity) {
         super(context , themeResId);
@@ -21,5 +28,10 @@ public class IntruderLogDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_intruder_log);
+
+        ListView intruder_adapter = findViewById(R.id.intruder_adapter);
+        intruderData = new DBHelper(context).getAllInruderdata();
+        intruder_adapter.setAdapter(new IntruderAdapter(getContext(), this.activity, intruderData));
+
     }
 }

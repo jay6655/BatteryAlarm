@@ -21,7 +21,6 @@ import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
@@ -32,13 +31,9 @@ public class AlarmReceiver  extends BroadcastReceiver {
 
     static Constant constant = Constant.getInstance();
     private AlarmData alarm;
-    private Context context;
-    private Intent intent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
-        this.intent = intent;
 
         Log.e("AlarmReceiver", "intent not null");
         Bundle bundleintent = intent.getBundleExtra("BUNDLE_EXTRA");
@@ -48,57 +43,51 @@ public class AlarmReceiver  extends BroadcastReceiver {
         }
         if (alarm == null) {
             Log.e("AlarmReceiver", "Alarm is null", new NullPointerException());
-            return;
         } else {
             WakeLocker.acquire(context);
-           /* if (constant.isAlarmActive) {*/
-                Log.e("AlarmReceiver", "Alarm is Active onReceiver" + alarm.toString());
-                //constant.isAlarmActive = false;
+            Log.e("AlarmReceiver", "Alarm is Active onReceiver" + alarm.toString());
+            new SharedPreferencesApplication().setAlarmAlwardySet(context , false);
 
-                new SharedPreferencesApplication().setAlarmAlwardySet(context , false);
+            AlarmData alarmData = new AlarmData();
+            SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+            String currentDateandTime = sdf.format(new Date());
+            alarmData.setAlarm_states("COMPLETE");
+            alarmData.setUnplagg_date_time(currentDateandTime);
+            alarmData.setUnplugg_percentage(Constant.getInstance().getCurrentBatteryStutus(context));
 
-                AlarmData alarmData = new AlarmData();
-                SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
-                String currentDateandTime = sdf.format(new Date());
-                alarmData.setAlarm_states("COMPLETE");
-                alarmData.setUnplagg_date_time(currentDateandTime);
-                alarmData.setUnplugg_percentage(Constant.getInstance().getCurrentBatteryStutus(context));
-                if (alarmData.getUnique_id() == 0) {
-                    new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData, true);
-                }
-                else {
-                    new DBHelper(context).updateLastUnpluggData(alarmData.getUnique_id(), alarmData, true);
-                }
+            if (alarmData.getUnique_id() == 0) {
+                new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData, true);
+            }
+            else {
+                new DBHelper(context).updateLastUnpluggData(alarmData.getUnique_id(), alarmData, true);
+            }
 
-                Constant.lastID = 0 ;
+            Constant.lastID = 0 ;
 
-                Intent intent1 = new Intent(context, AlarmRingingActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable("ALARM_KEY", alarm);
-                intent1.putExtra("BUNDLE_EXTRA", bundle);
-                intent1.putExtra("WHICH", "receiver");
-                context.startActivity(intent1);
+            Intent intent1 = new Intent(context, AlarmRingingActivity.class);
+            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            final Bundle bundle = new Bundle();
+            bundle.putParcelable("ALARM_KEY", alarm);
+            intent1.putExtra("BUNDLE_EXTRA", bundle);
+            intent1.putExtra("WHICH", "receiver");
+            context.startActivity(intent1);
+            constant.alarmDatabackup = alarm;
 
-                constant.alarmDatabackup = alarm;
-                
-                Log.e("AlarmReceiver", "ALARM ID  IN RECEIVER : " + alarm.getUnique_id());
-
-                Intent serviceIntent = new Intent(context, AlarmService.class);
-                final Bundle bundle1 = new Bundle();
-                bundle1.putParcelable("ALARM_KEY", alarm);
-                serviceIntent.putExtra("BUNDLE_EXTRA", bundle1);
-                ContextCompat.startForegroundService(context, serviceIntent);
-            /*} */
+            Log.e("AlarmReceiver", "ALARM ID  IN RECEIVER : " + alarm.getUnique_id());
+            Intent serviceIntent = new Intent(context, AlarmService.class);
+            final Bundle bundle1 = new Bundle();
+            bundle1.putParcelable("ALARM_KEY", alarm);
+            serviceIntent.putExtra("BUNDLE_EXTRA", bundle1);
+            ContextCompat.startForegroundService(context, serviceIntent);
         }
     }
 
 
-    public static void setReminderAlarms(Context context, List<AlarmData> alarms) {
-        for(AlarmData alarm : alarms) {
-            setAlarm(context, alarm);
-        }
-    }
+//    public static void setReminderAlarms(Context context, List<AlarmData> alarms) {
+//        for(AlarmData alarm : alarms) {
+//            setAlarm(context, alarm);
+//        }
+//    }
 
     private static PendingIntent launchAlarmLandingPage(Context ctx, AlarmData alarm) {
         return PendingIntent.getActivity(ctx, alarm.getUnique_id(), launchIntent(ctx), FLAG_UPDATE_CURRENT

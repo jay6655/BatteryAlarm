@@ -19,12 +19,15 @@ public class BatteryStatusReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent != null) {
+            if (Objects.equals(intent.getAction(), Intent.ACTION_BATTERY_OKAY)){
+                Log.e("RECEIVER " , "PRE  OKAY  %");
+            }
             if (Objects.equals(intent.getAction(), Intent.ACTION_BATTERY_CHANGED)){
                 int level , scale ;
                 level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 int battery_level = (int) (level * 100 / (float)scale) ;
-                Log.e("RECEIVER " , "PRE " + battery_level + " %");
+                Log.e("RECEIVER " , "PRE " + battery_level + " %" );
 
                 if (sh.getAlarmPercentage(context) == battery_level ){
                     sh.setAlarmPercentage(context , 0 );
@@ -33,6 +36,7 @@ public class BatteryStatusReceiver extends BroadcastReceiver {
                     //AlarmReceiver.setReminderAlarms(context , alarmData);
                 }
             }
+
         }
     }
 }

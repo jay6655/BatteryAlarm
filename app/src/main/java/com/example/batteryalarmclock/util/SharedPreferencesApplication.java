@@ -3,6 +3,8 @@ package com.example.batteryalarmclock.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.lockscreen.EnterPinActivity;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class SharedPreferencesApplication {
@@ -14,7 +16,10 @@ public class SharedPreferencesApplication {
     public String FLASHLIGHT = "FLASHLIGHT";
     public String SETALARMMTH = "SETALARMMTH";
     public String SETALARPERSENTAG ="SETALARPERSENTAG";
+    public String KEYUSERPIN= "KEYUSERPIN";
     public String ALARMALWARDYSET = "ALARMALWARDYSET";
+    public String FINGUREPRINTALLOW = "FINGUREPRINTALLOW";
+    public String INTRUDERCOUNT ="INTRUDERCOUNT";
 
 
     //TODO Set and Get get Started  or not
@@ -110,5 +115,53 @@ public class SharedPreferencesApplication {
             return sharedPreferences.getBoolean(ALARMALWARDYSET , false);
         }
         return false;
+    }
+
+    //Set User Pin
+    public void setUserPin(Context context, String set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEYUSERPIN , set);
+        editor.apply();
+    }
+
+    public String getUserPin(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(KEYUSERPIN)) {
+            return sharedPreferences.getString(KEYUSERPIN , "");
+        }
+        return "";
+    }
+
+    //User Fingure print allow or not
+    public void setUserFingurePrint(Context context, boolean set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(FINGUREPRINTALLOW , set);
+        editor.apply();
+    }
+
+    public boolean getUserFingurePrint(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(FINGUREPRINTALLOW)) {
+            return sharedPreferences.getBoolean(FINGUREPRINTALLOW , false);
+        }
+        return false;
+    }
+
+    //Intruder count
+    public void setIntruderimagecount(Context context, int set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(INTRUDERCOUNT , set);
+        editor.apply();
+    }
+
+    public int getIntruderimagecount(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(INTRUDERCOUNT)) {
+            return sharedPreferences.getInt(INTRUDERCOUNT , 0);
+        }
+        return 0;
     }
 }

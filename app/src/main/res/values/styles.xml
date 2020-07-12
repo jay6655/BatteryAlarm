@@ -45,5 +45,10 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
+    <style name="alert_dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/mainBg</item>
+    </style>
+
     <color name="ripple_clr">#808080</color>
+
 </resources>

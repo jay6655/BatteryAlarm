@@ -2,9 +2,11 @@ package com.example.batteryalarmclock.activity;
 
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
 
         if(!isMyServiceRunning(BatteryAlarmService.class)) {
             MainActivity.this.startService(new Intent(MainActivity.this, BatteryAlarmService.class));
+        }
+
+        if (Constant.getInstance().isSetTherftAlarm) {
+            Constant.getInstance().isSetTherftAlarm = false;
+            if (getIntent() != null) {
+                String done = getIntent().getStringExtra("DONE");
+                assert done != null;
+                if (done.equalsIgnoreCase("DONEPWD")) {
+                    Constant.getInstance().mp.release();
+                    Constant.getInstance().mp = null;
+                }
+            }
         }
 
         defualFragmentLoad();
@@ -76,5 +90,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 100){
+            if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED ){
+
+            }else{
+                Toast.makeText(MainActivity.this, "Access Denied ! Cannot proceed further ", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

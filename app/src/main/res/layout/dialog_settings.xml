@@ -165,6 +165,7 @@
                     android:layout_height="match_parent"/>
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_fingure"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"
@@ -315,7 +316,7 @@
                     android:layout_height="match_parent"/>
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_touch1"
+                    android:id="@+id/switch_vibration"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"
