@@ -41,13 +41,17 @@ public class MainActivity extends AppCompatActivity {
                 String done = getIntent().getStringExtra("DONE");
                 assert done != null;
                 if (done.equalsIgnoreCase("DONEPWD")) {
-                    Constant.getInstance().mp.release();
-                    Constant.getInstance().mp = null;
+                    Fragment fragment1  = new TheftAlarmFragment();
+                    FragmentManager fm1 = getSupportFragmentManager();
+                    FragmentTransaction ft1 = fm1.beginTransaction();
+                    ft1.add(R.id.container_fram, fragment1 ,"TheftAlarm");
+                    ft1.commit();
                 }
             }
         }
-
-        defualFragmentLoad();
+        else {
+            defualFragmentLoad();
+        }
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -13,7 +13,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -189,7 +188,6 @@ public class PinLockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnDeleteClickListener {
         void onDeleteClicked();
-
         void onDeleteLongClicked();
     }
 
@@ -198,7 +196,7 @@ public class PinLockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public NumberViewHolder(final View itemView, Typeface font) {
             super(itemView);
-            mNumberButton = (Button) itemView.findViewById(R.id.button);
+            mNumberButton = itemView.findViewById(R.id.button);
 
             if (font != null) {
                 mNumberButton.setTypeface(font);

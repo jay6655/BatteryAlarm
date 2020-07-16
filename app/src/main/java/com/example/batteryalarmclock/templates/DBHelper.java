@@ -219,7 +219,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return alarmDataList;
     }
 
-    // Adding new contact
+    // Adding new Intruder Data
     public void addIntruderData(IntruderData intruder) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -230,7 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_INTRUDER, null, values);
     }
 
-    // Getting All Patterns
+    // Getting All Intruder Data
     public List<IntruderData> getAllInruderdata() {
         List<IntruderData> intruderDataList = new ArrayList<IntruderData>();
         Cursor cursor;
@@ -259,6 +259,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         // looping through all rows and adding to list
         return intruderDataList;
+    }
+
+    public void deleteIntruder(String filePath) {
+        Log.e("deleteIntruder ", filePath );
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_INTRUDER, INTRUDER_IMAGE_PATH + " = ?",
+                new String[]{filePath});
+        db.close();
     }
 
     public void closeDatabase() {

@@ -65,4 +65,8 @@
     <string name="app_version">App Version</string>
     <string name="_0_0_1">0.0.1</string>
     <string name="touch_id_or_face_id">Touch ID Or Face ID</string>
+    <string name="it_s_ok">It’s Ok</string>
+    <string name="please_rate_your_experience_n_using_our_app">Please Rate your experience \n using our app.</string>
+    <string name="enjoying_the_app">Enjoying the App?</string>
+    <string name="loved_it">Loved It!</string>
 </resources>

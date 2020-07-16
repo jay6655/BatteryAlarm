@@ -2,24 +2,23 @@ package com.example.batteryalarmclock.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.hardware.biometrics.BiometricManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.batteryalarmclock.BuildConfig;
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
@@ -79,6 +78,10 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         RelativeLayout rel_appversion = findViewById(R.id.rel_appversion);
         rel_appversion.setOnClickListener(this);
 
+        RelativeLayout rel_back = findViewById(R.id.rel_back);
+        rel_back.setOnClickListener(this);
+
+
         checkFingurePrint();
 
         SwitchCompat switch_fingure = findViewById(R.id.switch_fingure);
@@ -86,10 +89,11 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         switch_fingure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                sh.setUserFingurePrint(context , b);
                 if (b) {
                     checkFingurePrint();
                 }
-                sh.setUserFingurePrint(context , b);
+
             }
         });
     }
@@ -105,7 +109,9 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             } else if (!fingerprintManager.hasEnrolledFingerprints()) {
                 // User hasn't enrolled any fingerprints to authenticate with
                 rel_touchid.setVisibility(View.VISIBLE);
-                showFingureNotRegister();
+                if (sh.getUserFingurePrint(context)) {
+                    showFingureNotRegister();
+                }
             } else {
                 // Everything is ready for fingerprint authentication
                 rel_touchid.setVisibility(View.VISIBLE);
@@ -156,8 +162,10 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             case  R.id.rel_purchase:
                 break;
             case  R.id.rel_rate:
+                rateUsCode();
                 break;
             case  R.id.rel_shareapp:
+                shareAppCode();
                 break;
             case  R.id.rel_setalarm:
                 break;
@@ -167,7 +175,41 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
                 break;
             case  R.id.rel_appversion:
                 break;
+            case  R.id.rel_back:
+                dismiss();
+                break;
 
+        }
+    }
+
+    private void rateUsCode() {
+        Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.getPackageName())));
+        }
+    }
+
+    private void shareAppCode() {
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, context.getResources().getString(R.string.app_name));
+            String shareMessage= "\nLet me recommend you this application\n\n";
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            context.startActivity(Intent.createChooser(shareIntent, "choose one"));
+        } catch(Exception e) {
+            e.printStackTrace();
+            //e.toString();
         }
     }
 
@@ -179,7 +221,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     private void showRemoveAdsDialog() {
-        RemoveAdsDialog removeAdsDialog = new RemoveAdsDialog(context , android.R.style.Theme_Black_NoTitleBar_Fullscreen , activity);
+        RemoveAdsDialog removeAdsDialog = new RemoveAdsDialog(context  , activity);
         removeAdsDialog.show();
     }
 

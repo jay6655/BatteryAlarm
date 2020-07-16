@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.adapter.IntruderAdapter;
@@ -32,6 +34,14 @@ public class IntruderLogDialog extends Dialog {
         ListView intruder_adapter = findViewById(R.id.intruder_adapter);
         intruderData = new DBHelper(context).getAllInruderdata();
         intruder_adapter.setAdapter(new IntruderAdapter(getContext(), this.activity, intruderData));
+
+        RelativeLayout rel_back = findViewById(R.id.rel_back);
+        rel_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
     }
 }

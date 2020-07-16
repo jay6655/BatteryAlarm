@@ -5,6 +5,9 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?selectableItemBackground"
         android:id="@+id/rel_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +35,7 @@
         android:id="@+id/intruderlogs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Intruder Logs"
+        android:text="@string/log_history"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/_12sdp" />

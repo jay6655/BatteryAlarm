@@ -6,9 +6,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
-import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -26,6 +24,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -84,9 +83,11 @@ public class EnterPinActivity extends AppCompatActivity {
 
     public static final String TAG = "EnterPinActivity";
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
+    public static int lastImageNo = 0;
+    public int counPicture = 0 ;
 
     public static final int RESULT_BACK_PRESSED = RESULT_FIRST_USER;
-    //    public static final int RESULT_TOO_MANY_TRIES = RESULT_FIRST_USER + 1;
+    //public static final int RESULT_TOO_MANY_TRIES = RESULT_FIRST_USER + 1;
     public static final String EXTRA_SET_PIN = "set_pin";
     public static final String EXTRA_FONT_TEXT = "textFont";
     public static final String EXTRA_FONT_NUM = "numFont";
@@ -105,7 +106,7 @@ public class EnterPinActivity extends AppCompatActivity {
     private boolean mSetPin = false;
     private String mFirstPin = "";
     private String when_toCall ="" ;
-    //    private int mTryCount = 0;
+    private int mTryCount = 0;
 
     private AnimatedVectorDrawable showFingerprint;
     private AnimatedVectorDrawable fingerprintToTick;
@@ -309,7 +310,6 @@ public class EnterPinActivity extends AppCompatActivity {
             mPinLockView.resetPinLockView();
         } else {
             if (pin.equals(mFirstPin)) {
-                //writePinToSharedPreferences(pin);
                 sh.setUserPin(EnterPinActivity.this , Utils.sha256(pin));
                 setResult(RESULT_OK);
                 finish();
@@ -325,14 +325,16 @@ public class EnterPinActivity extends AppCompatActivity {
     private void checkPin(String pin) {
         if (Utils.sha256(pin).equalsIgnoreCase(sh.getUserPin(EnterPinActivity.this))) {
             setResult(RESULT_OK);
+            Log.e("AVT" , "Check Pin" );
             if (when_toCall != null) {
+                Log.e("AVT" , "when_toCall Not null" );
                 if (when_toCall.equalsIgnoreCase("TherftAlarm")){
                     if (Constant.getInstance().mp != null) {
                         Constant.getInstance().mp.release();
                         Constant.getInstance().mp = null ;
                     }
                     Intent myIntent = new Intent(this, MainActivity.class);
-                    myIntent.putExtra("DONE" ,"DONE");
+                    myIntent.putExtra("DONE" ,"DONEPWD");
                     startActivity(myIntent);
                     finish();
                 }
@@ -340,21 +342,22 @@ public class EnterPinActivity extends AppCompatActivity {
             finish();
         } else {
             shake();
-//            mTryCount++;
+            mTryCount++;
+            Log.e("Count " , mTryCount + " ");
 
             mTextAttempts.setText(getString(R.string.pinlock_wrongpin));
             mPinLockView.resetPinLockView();
 
 //            if (mTryCount == 1) {
-//                mTextAttempts.setText(getString(R.string.pinlock_firsttry));
-//                mPinLockView.resetPinLockView();
-//            } else if (mTryCount == 2) {
-//                mTextAttempts.setText(getString(R.string.pinlock_secondtry));
-//                mPinLockView.resetPinLockView();
-//            } else if (mTryCount > 2) {
-//                setResult(RESULT_TOO_MANY_TRIES);
-//                finish();
-//            }
+////                mTextAttempts.setText(getString(R.string.pinlock_firsttry));
+////                mPinLockView.resetPinLockView();
+////            } else if (mTryCount == 2) {
+////                mTextAttempts.setText(getString(R.string.pinlock_secondtry));
+////                mPinLockView.resetPinLockView();
+////            } else if (mTryCount > 2) {
+////                setResult(RESULT_TOO_MANY_TRIES);
+////                finish();
+////            }
         }
     }
 
@@ -492,7 +495,6 @@ public class EnterPinActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -508,6 +510,7 @@ public class EnterPinActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    lastImageNo = sh.getIntruderimagecount(EnterPinActivity.this);
                     takePicture();
                 }
             }, 10000);
@@ -516,10 +519,25 @@ public class EnterPinActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.e(TAG, "onPause");
-        closeCamera();
-        stopBackgroundThread();
         super.onPause();
+        Log.e(TAG, "onPause" + mTryCount );
+        if (when_toCall.equalsIgnoreCase("TherftAlarm")) {
+            closeCamera();
+            stopBackgroundThread();
+            if (mTryCount <= 3){
+                Log.e("DELETE " , mTryCount + " lastImageNo : " +lastImageNo + " IntruderCoun " + sh.getIntruderimagecount(EnterPinActivity.this));
+                for (int i = lastImageNo ; i <= sh.getIntruderimagecount(EnterPinActivity.this) ; i++){
+                    File myDir = new File(Environment.getExternalStorageDirectory() + "/.BATTERYALARM" + "/.intruder_images");
+                    String fname = "SAL-inruder" + i + ".jpg";
+                    File file = new File(myDir, fname);
+                    Log.e("DELETE ", "filePath : " + file.getAbsolutePath());
+                    new DBHelper(EnterPinActivity.this).deleteIntruder(file.getAbsolutePath());
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -553,6 +571,7 @@ public class EnterPinActivity extends AppCompatActivity {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     };
+
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(CameraDevice camera) {
@@ -597,6 +616,7 @@ public class EnterPinActivity extends AppCompatActivity {
     }
 
     protected void takePicture() {
+
         sh.setIntruderimagecount(EnterPinActivity.this , sh.getIntruderimagecount(EnterPinActivity.this) + 1 );
         if(null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -629,14 +649,12 @@ public class EnterPinActivity extends AppCompatActivity {
             }
             String fname = "SAL-inruder" + sh.getIntruderimagecount(EnterPinActivity.this) + ".jpg";
             final File file = new File(myDir, fname);
-            //final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
                     try (Image image = reader.acquireLatestImage()) {
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
-                       //new createimage(EnterPinActivity.this, bytes);
                         buffer.get(bytes);
                         save(bytes);
                     }
@@ -655,10 +673,10 @@ public class EnterPinActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(EnterPinActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EnterPinActivity.this, "Saved: " + file, Toast.LENGTH_SHORT).show();
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM , yyyy", Locale.US);
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("hh:mm:ss a", Locale.US);
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd , yyyy" , Locale.getDefault());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("hh:mm:ss a" , Locale.getDefault());
 
                     IntruderData data = new IntruderData();
                     data.setIntruder_date(sdf.format(Calendar.getInstance().getTime()));
@@ -668,6 +686,21 @@ public class EnterPinActivity extends AppCompatActivity {
                     new DBHelper(EnterPinActivity.this).closeDatabase();
 
                     createCameraPreview();
+
+                    if (counPicture < 3) {
+                        new CountDownTimer(1000, 1000) {
+                            @Override
+                            public void onFinish() {
+                            }
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                Log.e("Counter in call", " jhgfjsdhsf" +  counPicture );
+                                takePicture();
+                                counPicture++;
+                            }
+                        }.start();
+                    }
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
@@ -687,6 +720,7 @@ public class EnterPinActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
@@ -759,5 +793,4 @@ public class EnterPinActivity extends AppCompatActivity {
             imageReader = null;
         }
     }
-
 }

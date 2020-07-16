@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ import com.example.batteryalarmclock.templates.DBHelper;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 import com.example.lockscreen.EnterPinActivity;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,7 +76,6 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
                             Log.e("RECEIVER " , "hours  : " + hours + " minutes : " + minutes );
                             Log.e("RECEIVER " , "difference_hours  : " + difference_hours + " difference_min : " + difference_min );
                             AlarmReceiver.setAlarm(context , alarm);
-
                         } catch (ParseException e) {
                             e.printStackTrace();
                             Log.e("CATCh" , e.getMessage() + " ");
@@ -108,8 +105,9 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
                         new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData , false);
                     }
                 }
+                Log.e("AVT" , "constant.isSetTherftAlarm " + constant.isSetTherftAlarm  );
                 if (constant.isSetTherftAlarm){
-                    
+                    Log.e("AVT" , "constant.isSetTherftAlarm is true " );
                     constant.mp = MediaPlayer.create(context , R.raw.siren);
                     constant.mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     constant.mp.setVolume(15 , 15);
@@ -126,8 +124,7 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
 
     private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID, "Alarm is Playing",
-                    NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID, "Alarm is Playing", NotificationManager.IMPORTANCE_HIGH);
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(serviceChannel);

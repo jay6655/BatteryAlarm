@@ -7,10 +7,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -20,11 +22,9 @@ import com.example.batteryalarmclock.activity.MainActivity;
 import com.example.batteryalarmclock.model.IntruderData;
 import com.example.batteryalarmclock.receiver.BatteryStatusReceiver;
 import com.example.batteryalarmclock.receiver.PowerConnctedReceiver;
+import com.example.batteryalarmclock.templates.Constant;
 
 public class BatteryAlarmService extends Service {
-
-    private static final String CHANNEL_ID = "ForegroundBatteryService";
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,18 +38,7 @@ public class BatteryAlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        createNotificationChannel();
-
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(this.getString(R.string.app_name))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(1, notification);
+        notification_set();
 
         //Power Connected or not receiver register
         PowerConnctedReceiver powerConnctedReceiver = new PowerConnctedReceiver();
@@ -66,6 +55,8 @@ public class BatteryAlarmService extends Service {
         filter_new.addAction(Intent.ACTION_BATTERY_OKAY);
         registerReceiver(batteryStatusReceiver , filter_new);
 
+        Constant.getInstance().isCableConnected = isConnected();
+
         return START_STICKY;
     }
 
@@ -78,15 +69,32 @@ public class BatteryAlarmService extends Service {
         return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID, "Alarm is Playing",
-                    NotificationManager.IMPORTANCE_HIGH);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(serviceChannel);
-            }
+    public void notification_set(){
+        final String CHANNEL_ONE_NAME = "Default";
+        String CHANNEL_ONE_ID = "channel-01";
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationChannel notificationChannel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID, CHANNEL_ONE_NAME,
+                    NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            manager.createNotificationChannel(notificationChannel);
         }
+
+        RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.notification_layout_oreo);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ONE_ID)
+                .setContentTitle(getApplicationContext().getResources().getString(R.string.app_name))
+                .setContentText(getApplicationContext().getResources().getString(R.string.app_name))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(null)
+                        .bigLargeIcon(null))
+                .setCustomContentView(notificationLayout)
+                .setCustomBigContentView(notificationLayout);
+        startForeground(1, notification.build());
     }
 
     @Override

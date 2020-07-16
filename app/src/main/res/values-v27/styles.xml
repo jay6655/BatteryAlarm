@@ -16,11 +16,15 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:colorButtonNormal">@color/buttonclr</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="android:colorControlHighlight">@color/colorPrimaryDark</item>
 
         <item name="android:textColorPrimary">@android:color/white</item>
+
+        <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
     </style>
 
     <style name="AppFullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:colorButtonNormal">@color/buttonclr</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
@@ -30,6 +34,8 @@
         <item name="android:windowLayoutInDisplayCutoutMode">
             shortEdges <!-- default, shortEdges, never -->
         </item>
+
+        <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
     </style>
 
     <style name="full_screen_dialog" parent="android:Theme.Dialog">

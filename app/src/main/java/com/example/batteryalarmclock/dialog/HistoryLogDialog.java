@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +36,13 @@ public class HistoryLogDialog extends Dialog {
 
         Log.e("hfkj" , "HistoryLogDialog  ");
 
+        RelativeLayout rel_back = findViewById(R.id.rel_back);
+        rel_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
         alarmDataArrayList = new DBHelper(context).getAllAlarmData();
 
         RecyclerView recycle_history = findViewById(R.id.recycle_history);
