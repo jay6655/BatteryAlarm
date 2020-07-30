@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Battery Alarm Clock</string>
+
+    <!--test id-->
+    <string name="mob_ad_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ad_id">ca-app-pub-3940256099942544/9214589741</string>
+
     <string name="pinlock_title">Enter Pin Code</string>
     <string name="pinlock_settitle">Set Pin Code</string>
     <string name="pinlock_firsttry">Wrong Pin Code: First Try</string>
@@ -8,7 +13,6 @@
     <string name="pinlock_secondPin">Enter Pin Code Again</string>
     <string name="pinlock_tryagain">Pin Codes Are Not The Same</string>
     <string name="pinlock_fingerprint">Use Fingerprint</string>
-
 
     <string name="title_home">Battery Alarm</string>
     <string name="title_dashboard">Theft Alarm</string>
@@ -63,10 +67,33 @@
     <string name="feedback">Feedback</string>
     <string name="terms_policy">Terms Policy</string>
     <string name="app_version">App Version</string>
-    <string name="_0_0_1">0.0.1</string>
     <string name="touch_id_or_face_id">Touch ID Or Face ID</string>
-    <string name="it_s_ok">It’s Ok</string>
+    <string name="it_s_ok">It’s OK</string>
     <string name="please_rate_your_experience_n_using_our_app">Please Rate your experience \n using our app.</string>
     <string name="enjoying_the_app">Enjoying the App?</string>
     <string name="loved_it">Loved It!</string>
+    <string name="stop_alarm">Stop Alarm</string>
+
+    <string name="txtDescriptionGDPR">By proceeding, you agree with our \n  <a href="http://www.google.com">Terms</a>  and <a href="http://www.google.com">Privacy Policy</a> .</string>
+    <string name="set_persantage">Set Persantage</string>
+    <string name="set_time">Set Time</string>
+    <string name="set_timer">Set Timer</string>
+    <string name="persantage">Persantage</string>
+    <string name="delete_all">Delete All</string>
+    <string name="set_charging">Set Charging:</string>
+    <string name="discharge">Discharge:</string>
+    <string name="share">Share</string>
+    <string name="close">Close</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="inapp_msg">Enjoy on ad-free experience while \n helping support development</string>
+    <string name="unlock_now_">Unlock now $2.99</string>
+    <string name="eastimated_finish">Eastimated finish At 1 hours 30 min</string>
+    <string name="charging">Charging....</string>
+    <string name="alert">"Alert "</string>
+    <string name="no_internet">No Internet Connection Available</string>
+    <string name="txt_failed">Purchase Failed</string>
+    <string name="fail_msg">No money was taken from account. Please try again.</string>
+    <string name="intruder_logs">Intruder Logs</string>
+
+
 </resources>

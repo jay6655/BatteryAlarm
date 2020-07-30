@@ -1,5 +1,6 @@
 package com.example.batteryalarmclock.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,8 +12,9 @@ import androidx.annotation.NonNull;
 import com.example.batteryalarmclock.R;
 
 public class RateUsDialog extends Dialog {
-    public RateUsDialog(@NonNull Context context) {
-        super(context);
+
+    public RateUsDialog(Context context1, int dialogCustomTheme,  Activity context) {
+        super(context1 , dialogCustomTheme);
     }
 
     @Override

@@ -6,8 +6,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,7 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 public class PowerConnctedReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "DISCONNECTEDCHANNEL";
@@ -37,14 +38,104 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
     public static final String[] POWER_ACTIONS = {
             Intent.ACTION_POWER_CONNECTED ,
-            Intent.ACTION_POWER_DISCONNECTED
+            Intent.ACTION_POWER_DISCONNECTED ,
+            Intent.ACTION_BATTERY_CHANGED
     };
 
     @Override
     public void onReceive(Context context, Intent intent) {
         dbHelper = new DBHelper(context);
         if (intent != null) {
-            if (Objects.requireNonNull(intent.getAction()).equals(Intent.ACTION_POWER_CONNECTED)) {
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = context.registerReceiver(null, ifilter);
+
+            // Are we charging / charged?
+            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
+
+            if (isCharging){
+                Log.e("RECEIVER " , "CONNECTED isCharging : Constant.lastID " + Constant.lastID);
+                constant.isCableConnected = true;
+                Toast.makeText(context, " CONNECTED isCharging ", Toast.LENGTH_SHORT).show();
+                String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
+                if (sh.getAlarmAlwardySet(context)){
+                    if (set_alarm != null) {
+                        if (set_alarm.equalsIgnoreCase("TIME")) {
+                            Log.e("RECEIVER ", set_alarm + " SET ALS");
+                            AlarmData alarm = new DBHelper(context).getPerticularAlarmData(String.valueOf(Constant.lastID));
+                            Log.e("RECEIVER ", alarm.getCurrent_date_time() + " SET ALS");
+                            SimpleDateFormat format = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+                            try {
+                                Date date1 = format.parse(alarm.getCurrent_date_time());
+                                String currentDateandTime = format.format(new Date());
+                                Date date2 = format.parse(currentDateandTime);
+                                assert date2 != null;
+                                assert date1 != null;
+                                long millis = date2.getTime() - date1.getTime();
+
+                                long minutes = (millis / (1000 * 60)) % 60;
+                                long hours = millis / (1000 * 60 * 60);
+
+                                long difference_hours = alarm.getSelected_hour() - hours;
+                                long difference_min = alarm.getSelected_minute() - minutes;
+
+                                if (difference_hours > 0 && difference_min > 0) {
+                                    alarm.setSelected_minute((int) difference_min);
+                                    alarm.setSelected_hour((int) difference_hours);
+                                }
+                                Log.e("RECEIVER ", "hours  : " + hours + " minutes : " + minutes);
+                                Log.e("RECEIVER ", "difference_hours  : " + difference_hours + " difference_min : " + difference_min);
+                                AlarmReceiver.setAlarm(context, alarm);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                Log.e("CATCh", e.getMessage() + " ");
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                Log.e("RECEIVER " , "DISCONNECTED");
+                constant.isCableConnected = false;
+                Toast.makeText(context, " DISCONNECTED  isCharging", Toast.LENGTH_SHORT).show();
+                String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
+                if (Constant.lastID != 0 ) {
+                    if (sh.getAlarmAlwardySet(context)) {
+                        Log.e("BATTERY", set_alarm + " xx");
+                        if (set_alarm.equalsIgnoreCase("PERCENTAGE")) {
+                            showNotification(context , context.getResources().getString(R.string.app_name) , "Your Selected percentage not occurs");
+                        } else if (set_alarm.equalsIgnoreCase("TIME")) {
+                            showNotification(context , context.getResources().getString(R.string.app_name) , "Your Selected time not occurs");
+                            AlarmReceiver.cancelReminderAlarm(context, Constant.lastID);
+                        }
+                        AlarmData alarmData = new AlarmData();
+                        SimpleDateFormat sdf = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+                        String currentDateandTime = sdf.format(new Date());
+                        alarmData.setUnplagg_date_time(currentDateandTime);
+                        alarmData.setUnplugg_percentage(constant.getCurrentBatteryStutus(context));
+                        new DBHelper(context).updateLastUnpluggData(Constant.lastID, alarmData , false);
+                    }
+                }
+                Log.e("AVT" , "constant.isSetTherftAlarm " + constant.isSetTherftAlarm  );
+                if (constant.isSetTherftAlarm) {
+                    if (sh.getTheftAlarmOcured(context)) {
+                        sh.setTheftAlarmOcured(context , false);
+                        Log.e("AVT", "constant.isSetTherftAlarm is true ");
+                        constant.mp = MediaPlayer.create(context, R.raw.siren);
+                        constant.mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        constant.mp.setVolume(15, 15);
+                        constant.mp.setLooping(true);
+                        constant.mp.start();
+
+                        Intent intentEnter = new Intent(context, EnterPinActivity.class);
+                        intentEnter.putExtra("WHEN_CALL", "TherftAlarm");
+                        context.startActivity(intentEnter);
+                    }
+                }
+            }
+
+            /*if (Objects.requireNonNull(intent.getAction()).equals(Intent.ACTION_POWER_CONNECTED)) {
                 Log.e("RECEIVER " , "CONNECTED " + Constant.lastID);
                 constant.isCableConnected = true;
                 Toast.makeText(context, " CONNECTED ", Toast.LENGTH_SHORT).show();
@@ -118,7 +209,7 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
                     intentEnter.putExtra("WHEN_CALL" , "TherftAlarm");
                     context.startActivity(intentEnter);
                 }
-            }
+            }*/
         }
     }
 

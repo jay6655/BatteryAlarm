@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.model.AlarmData;
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,35 +47,52 @@ public class LogHistoryAdapter extends RecyclerView.Adapter<LogHistoryAdapter.Lo
 
         holder.total_progress.setProgress(alarmData.getUnplugg_percentage());
         holder.txt_per.setText(alarmData.getUnplugg_percentage() + " %");
-        holder.txt_set_time.setText(alarmData.getSelected_hour() + " h "+ alarmData.getSelected_minute() + " min");
+        Log.e("TYPE ", alarmData.getAlarm_type() + " ");
+        if (alarmData.getAlarm_type().equalsIgnoreCase("TIME")) {
+            //Connected Time
+            holder.txt_set_time.setText(alarmData.getSelected_hour() + " h " + alarmData.getSelected_minute() + " min");
 
-        SimpleDateFormat format = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
-        try {
-            Date date1 = format.parse(alarmData.getCurrent_date_time());
-            Date date2 = format.parse(alarmData.getUnplagg_date_time());
-            assert date2 != null;
-            assert date1 != null;
-            long millis = date2.getTime() - date1.getTime();
+            //Disconnected Time
+            SimpleDateFormat format = new SimpleDateFormat(" MMM dd yyyy HH:mm:ss", Locale.getDefault());
+            try {
+                Date date1 = format.parse(alarmData.getCurrent_date_time());
+                Date date2 = format.parse(alarmData.getUnplagg_date_time());
+                assert date2 != null;
+                assert date1 != null;
+                long millis = date2.getTime() - date1.getTime();
 
-            long minutes = (millis / (1000 * 60)) % 60;
-            long hours = millis / (1000 * 60 * 60);
+                long minutes = (millis / (1000 * 60)) % 60;
+                long hours = millis / (1000 * 60 * 60);
 
-            long difference_hours = alarmData.getSelected_hour() - hours;
-            long difference_min = alarmData.getSelected_minute() - minutes ;
+                long difference_hours = alarmData.getSelected_hour() - hours;
+                long difference_min = alarmData.getSelected_minute() - minutes ;
 
-            holder.txt_discharge_time.setText(difference_hours + " h "+ difference_hours + " min");
+                holder.txt_discharge_time.setText(difference_hours + " h "+ difference_hours + " min");
 
-            if (difference_hours > 0 && difference_min > 0 ){
-                alarmData.setSelected_minute((int) difference_min);
-                alarmData.setSelected_hour((int) difference_hours);
+                if (difference_hours > 0 && difference_min > 0 ){
+                    alarmData.setSelected_minute((int) difference_min);
+                    alarmData.setSelected_hour((int) difference_hours);
+                }
+                Log.e("RECEIVER " , "hours  : " + hours + " minutes : " + minutes );
+                Log.e("RECEIVER " , "difference_hours  : " + difference_hours + " difference_min : " + difference_min );
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e("CATCh" , e.getMessage() + " ");
             }
-            Log.e("RECEIVER " , "hours  : " + hours + " minutes : " + minutes );
-            Log.e("RECEIVER " , "difference_hours  : " + difference_hours + " difference_min : " + difference_min );
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e("CATCh" , e.getMessage() + " ");
         }
+        else {
+            // Connected Persentage
+            holder.txt_set_time.setText(alarmData.getCurrent_percentage() + " % ");
+            //Disconnected Purcentage
+            holder.txt_discharge_time.setText(alarmData.getUnplugg_percentage() + " % ");
+        }
+
+        String date_demo = alarmData.getCurrent_date_time();
+        date_demo = date_demo.substring(0,12);
+        StringBuilder sb = new StringBuilder(date_demo);
+        sb.insert(7, ',');
+        holder.txt_date.setText(sb.toString());
     }
 
     @Override

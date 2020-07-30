@@ -3,21 +3,26 @@ package com.example.batteryalarmclock.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.batteryalarmclock.R;
+import com.example.batteryalarmclock.dialog.FullScreenImageDialog;
 import com.example.batteryalarmclock.model.IntruderData;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class IntruderAdapter extends BaseAdapter {
     private Context context;
@@ -46,8 +51,8 @@ public class IntruderAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return i;
+    public IntruderData getItem(int i) {
+        return intruderDataList.get(i);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class IntruderAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         View vi = view;
         final ViewHolder holder;
         if(view == null){
@@ -67,6 +72,7 @@ public class IntruderAdapter extends BaseAdapter {
             holder.img_intruder_photo = vi.findViewById(R.id.img_photo);
             holder.txt_date = vi.findViewById(R.id.txt_date);
             holder.txt_time = vi.findViewById(R.id.txt_time);
+            holder.rel_view = vi.findViewById(R.id.rel_password);
 
             /************  Set holder with LayoutInflater ************/
             vi.setTag( holder );
@@ -75,23 +81,32 @@ public class IntruderAdapter extends BaseAdapter {
             holder =(ViewHolder)vi.getTag();
         }
 
-        IntruderData intruderData = intruderDataList.get(i);
+        final IntruderData intruderData = intruderDataList.get(i);
 
         Uri uri = Uri.fromFile(new File(intruderData.getIntruder_path()));
         Picasso.get().load(uri)
-                .rotate(180)
+                .transform(new BlurTransformation(context, 25, 1))
                 .resize(96, 96).centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE).
                 into(holder.img_intruder_photo);
 
         holder.txt_date.setText(intruderData.getIntruder_date());
         holder.txt_time.setText(intruderData.getIntruder_time());
 
+        holder.rel_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FullScreenImageDialog fullScreenImageDialog = new FullScreenImageDialog(context , R.style.AppTheme , activity , intruderData);
+                fullScreenImageDialog.show();
+            }
+        });
+
 
         return vi;
     }
 
     public static class ViewHolder{
-        public TextView txt_app_name,txt_date,txt_time;
-        public ImageView img_intruder_photo,app_icon;
+        public TextView  txt_date,txt_time;
+        public ImageView img_intruder_photo;
+        RelativeLayout rel_view;
     }
 }

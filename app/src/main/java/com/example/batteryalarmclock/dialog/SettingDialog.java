@@ -6,21 +6,31 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.batteryalarmclock.BuildConfig;
 import com.example.batteryalarmclock.R;
+import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
+import com.example.lockscreen.EnterPinActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 
 public class SettingDialog extends Dialog implements View.OnClickListener {
@@ -60,9 +70,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         RelativeLayout rel_removeAds = findViewById(R.id.rel_removeAds);
         rel_removeAds.setOnClickListener(this);
 
-        RelativeLayout rel_purchase = findViewById(R.id.rel_purchase);
-        rel_purchase.setOnClickListener(this);
-
         RelativeLayout rel_rate = findViewById(R.id.rel_rate);
         rel_rate.setOnClickListener(this);
 
@@ -81,7 +88,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         RelativeLayout rel_back = findViewById(R.id.rel_back);
         rel_back.setOnClickListener(this);
 
-
         checkFingurePrint();
 
         SwitchCompat switch_fingure = findViewById(R.id.switch_fingure);
@@ -97,6 +103,29 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        TextView txt_version_val = findViewById(R.id.txt_version_val);
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            String version = pInfo.versionName;
+            txt_version_val.setText(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+        if (sh.getInAppDone(context)){
+            rel_live_ad.setVisibility(View.GONE);
+        }
+        else {
+            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
+        }
+    }
+
 
     private void checkFingurePrint() {
         RelativeLayout rel_touchid = findViewById(R.id.rel_touchid);
@@ -159,8 +188,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             case  R.id.rel_removeAds:
                 showRemoveAdsDialog();
                 break;
-            case  R.id.rel_purchase:
-                break;
             case  R.id.rel_rate:
                 rateUsCode();
                 break;
@@ -215,23 +242,23 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
     private void showLockScreen() {
         sh.setUserPin(context, "");
-        Intent intent = new Intent(getContext(), com.example.lockscreen.EnterPinActivity.class);
+        Intent intent = new Intent(getContext(), EnterPinActivity.class);
         intent.putExtra("WHEN_CALL", "Setting");
         context.startActivity(intent);
     }
 
     private void showRemoveAdsDialog() {
-        RemoveAdsDialog removeAdsDialog = new RemoveAdsDialog(context  , activity);
+        RemoveAdsDialog removeAdsDialog = new RemoveAdsDialog(context  ,R.style.AppTheme ,activity);
         removeAdsDialog.show();
     }
 
     private void showIntruderLog() {
-        IntruderLogDialog intruderLogDialog = new IntruderLogDialog(context , android.R.style.Theme_Black_NoTitleBar_Fullscreen , activity);
+        IntruderLogDialog intruderLogDialog = new IntruderLogDialog(context , R.style.AppTheme , activity);
         intruderLogDialog.show();
 }
 
     private void showHistoryPage() {
-        HistoryLogDialog historyLogDialog = new HistoryLogDialog(context , android.R.style.Theme_Black_NoTitleBar_Fullscreen , activity);
+        HistoryLogDialog historyLogDialog = new HistoryLogDialog(context , R.style.AppTheme , activity);
         historyLogDialog.show();
     }
 }

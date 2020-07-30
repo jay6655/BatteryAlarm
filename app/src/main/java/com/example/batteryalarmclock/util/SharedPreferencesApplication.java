@@ -2,9 +2,6 @@ package com.example.batteryalarmclock.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import com.example.lockscreen.EnterPinActivity;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class SharedPreferencesApplication {
@@ -19,7 +16,9 @@ public class SharedPreferencesApplication {
     public String KEYUSERPIN= "KEYUSERPIN";
     public String ALARMALWARDYSET = "ALARMALWARDYSET";
     public String FINGUREPRINTALLOW = "FINGUREPRINTALLOW";
-    public String INTRUDERCOUNT ="INTRUDERCOUNT";
+    public String INTRUDERCOUNT = "INTRUDERCOUNT";
+    public String INAPPDONE = "INAPPDONE";
+    public String THEFTRUNNING = "THEFTRUNNING";
 
 
     //TODO Set and Get get Started  or not
@@ -38,7 +37,7 @@ public class SharedPreferencesApplication {
         editor.apply();
     }
 
-    //Switch is slient
+    //TODO Switch is slient
     public void setSlientSwich(Context context, boolean set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -54,7 +53,7 @@ public class SharedPreferencesApplication {
         return false;
     }
 
-    //Flasjh Light
+    //TODO Flash Light
     public void setFlashLight(Context context, boolean set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -70,6 +69,7 @@ public class SharedPreferencesApplication {
         return false;
     }
 
+    //TODO setAlarm Method
     public void setAlarmMethod(Context context, String set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -85,7 +85,7 @@ public class SharedPreferencesApplication {
         return "SET_PERCNT";
     }
 
-    // set and  get Alarm Persentage time
+    //TODO set and  get Alarm Persentage time
     public void setAlarmPercentage(Context context, int set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -101,7 +101,7 @@ public class SharedPreferencesApplication {
         return 0;
     }
 
-    //Alarm Alwardy Set or not
+    //TODO Alarm Alwardy Set or not
     public void setAlarmAlwardySet(Context context, boolean set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -117,7 +117,7 @@ public class SharedPreferencesApplication {
         return false;
     }
 
-    //Set User Pin
+    //TODO Set User Pin
     public void setUserPin(Context context, String set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -128,12 +128,12 @@ public class SharedPreferencesApplication {
     public String getUserPin(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         if (sharedPreferences.contains(KEYUSERPIN)) {
-            return sharedPreferences.getString(KEYUSERPIN , "");
+            return sharedPreferences.getString(KEYUSERPIN , "ABC");
         }
-        return "";
+        return "ABC";
     }
 
-    //User Fingure print allow or not
+    //TODO User Fingure print allow or not
     public void setUserFingurePrint(Context context, boolean set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -149,7 +149,7 @@ public class SharedPreferencesApplication {
         return false;
     }
 
-    //Intruder count
+    //TODO Intruder count
     public void setIntruderimagecount(Context context, int set) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -160,8 +160,41 @@ public class SharedPreferencesApplication {
     public int getIntruderimagecount(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
         if (sharedPreferences.contains(INTRUDERCOUNT)) {
-            return sharedPreferences.getInt(INTRUDERCOUNT , 0);
+            return sharedPreferences.getInt(INTRUDERCOUNT , 1);
         }
-        return 0;
+        return 1;
     }
+
+    //TODO Thefrt Alarm Running or not
+    public boolean getTheftAlarmOcured(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(THEFTRUNNING)) {
+            return sharedPreferences.getBoolean(THEFTRUNNING , true);
+        }
+        return true;
+    }
+
+    public void setTheftAlarmOcured(Context context, boolean set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(THEFTRUNNING , set);
+        editor.apply();
+    }
+
+    //TODO InApp Done or not
+    public boolean getInAppDone(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        if (sharedPreferences.contains(INAPPDONE)) {
+            return sharedPreferences.getBoolean(INAPPDONE , false);
+        }
+        return false;
+    }
+
+    public void setInAppDone(Context context, boolean set) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MYPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(INAPPDONE , set);
+        editor.apply();
+    }
+
 }

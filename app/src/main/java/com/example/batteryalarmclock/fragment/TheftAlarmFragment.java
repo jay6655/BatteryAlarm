@@ -1,14 +1,9 @@
 package com.example.batteryalarmclock.fragment;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,13 +22,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.activity.ActivateAlarmActivity;
-import com.example.batteryalarmclock.adapter.LogHistoryAdapter;
 import com.example.batteryalarmclock.dialog.SettingDialog;
 import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
-import com.example.lockscreen.EnterPinActivity;
-
-import java.util.Objects;
 
 public class TheftAlarmFragment extends Fragment {
     Constant constant = Constant.getInstance();
@@ -59,8 +50,14 @@ public class TheftAlarmFragment extends Fragment {
         img_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingDialog settingDialog = new SettingDialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen ,getActivity());
+                SettingDialog settingDialog = new SettingDialog(requireContext(), R.style.AppTheme ,getActivity());
                 settingDialog.show();
+                settingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        adShowCode();
+                    }
+                });
             }
         });
 
@@ -82,39 +79,56 @@ public class TheftAlarmFragment extends Fragment {
     }
 
     private void setActivateAlarm() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.e("isCableConnected", constant.isCableConnected + " ");
-            if (constant.isCableConnected) {
-                constant.isSetTherftAlarm = true;
+        if (sh.getUserPin(requireContext()).equalsIgnoreCase("")){
+            Intent intent = new Intent(getContext(), com.example.lockscreen.EnterPinActivity.class);
+            intent.putExtra("WHEN_CALL", "THEFTALARMSET");
+            requireContext().startActivity(intent);
+        }
+        else {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.e("isCableConnected", constant.isCableConnected + " ");
+                if (constant.isCableConnected) {
+                    constant.isSetTherftAlarm = true;
+                    sh.setTheftAlarmOcured(requireContext() , true);
 
-                Intent activateAlarm = new Intent(getContext(), ActivateAlarmActivity.class);
-                startActivity(activateAlarm);
+                    Intent activateAlarm = new Intent(getContext(), ActivateAlarmActivity.class);
+                    startActivity(activateAlarm);
+                } else {
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext(), R.style.alert_dialog);
+                    builder.setTitle("Alert ");
+                    builder.setMessage("Please Connect to charging");
+                    builder.setPositiveButton(requireContext().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    //Creating dialog box
+                    android.app.AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    Button btn1 = dialog.findViewById(android.R.id.button1);
+                    btn1.setTextColor(requireContext().getResources().getColor(R.color.colorPrimary));
+                }
             } else {
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext(), R.style.alert_dialog);
-                builder.setTitle("Alert ");
-                builder.setMessage("Please Connect to charging");
-                builder.setPositiveButton(requireContext().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                //Creating dialog box
-                android.app.AlertDialog dialog = builder.create();
-                dialog.show();
-
-                /* TextView title =  dialog.findViewById(R.id.alertTitle);
-                 title.setTextColor(requireContext().getResources().getColor(android.R.color.black));
-
-                 TextView messagemew =  dialog.findViewById(android.R.id.message);
-                 title.setTextColor(requireContext().getResources().getColor(android.R.color.black));*/
-
-                Button btn1 = dialog.findViewById(android.R.id.button1);
-                btn1.setTextColor(requireContext().getResources().getColor(R.color.colorPrimary));
-
+                checkPermission();
             }
-        }else {
-            checkPermission();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adShowCode();
+    }
+
+    private void adShowCode(){
+        RelativeLayout rel_live_ad = rootView.findViewById(R.id.rel_live_ad);
+        if (sh.getInAppDone(requireContext())){
+            rel_live_ad.setVisibility(View.INVISIBLE);
+        }
+        else {
+            Constant.getInstance().loadBannerAd(rel_live_ad, requireContext(), requireActivity());
         }
     }
 }

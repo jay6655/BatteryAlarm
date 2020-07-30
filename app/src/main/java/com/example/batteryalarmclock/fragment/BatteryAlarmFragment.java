@@ -17,12 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.batteryalarmclock.R;
@@ -38,7 +38,6 @@ import com.example.batteryalarmclock.templates.DBHelper;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -54,7 +53,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
     TextView enterPer , entertime , current_per_frg;
     ProgressBar progressBar;
-    Constant constant = Constant.getInstance();
+    private Constant constant = Constant.getInstance();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
         img_settings.setOnClickListener(this);
 
         //TODO Alarm Slient or not
-        Switch sw_slient = rootView.findViewById(R.id.sw_slient);
+        SwitchCompat sw_slient = rootView.findViewById(R.id.sw_slient);
         sw_slient.setChecked(sh.getSlientSwich(requireContext()));
         sw_slient.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -93,13 +92,12 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
         setFlashLight();
 
         //TODO Alarm play Flash light on of off
-        Switch sw_flash = rootView.findViewById(R.id.sw_flash);
+        SwitchCompat sw_flash = rootView.findViewById(R.id.sw_flash);
         sw_flash.setChecked(sh.getFlashLight(requireContext()));
         sw_flash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 sh.setFlashLight(requireContext(), b);
-
             }
         });
 
@@ -126,6 +124,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
             persantage_view.setVisibility(View.INVISIBLE);
             sh.setAlarmMethod(requireContext() , "SET_TIMER");
         }
+
         alarm_button_view.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -163,17 +162,35 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
             Log.e("BATTERY constant.lastID" , Constant.lastID + " xx");
             dbHelper.updateAlarmStatus("DISCARD" , Constant.lastID);
             String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
-            Log.e("BATTERY" , set_alarm + " xx");
-            if (set_alarm.equalsIgnoreCase("PERCENTAGE")) {
-                sh.setAlarmPercentage(requireContext(), 0 );
+            if (set_alarm != null) {
+                Log.e("BATTERY", set_alarm + " xx");
+                if (set_alarm.equalsIgnoreCase("PERCENTAGE")) {
+                    sh.setAlarmPercentage(requireContext(), 0);
+                } else if (set_alarm.equalsIgnoreCase("TIME")) {
+                    AlarmReceiver.cancelReminderAlarm(requireContext(), Constant.lastID);
+                }
+                setAlarmAllData();
             }
-            else if (set_alarm.equalsIgnoreCase("TIME")){
-                AlarmReceiver.cancelReminderAlarm(requireContext() , Constant.lastID);
-            }
-            setAlarmAllData();
         }
         else {
             setAlarmAllData();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("VIEW" , "onResume");
+        adShowCode();
+    }
+
+    private void adShowCode(){
+        RelativeLayout rel_live_ad = rootView.findViewById(R.id.rel_live_ad);
+        if (sh.getInAppDone(requireContext())){
+            rel_live_ad.setVisibility(View.INVISIBLE);
+        }
+        else {
+            Constant.getInstance().loadBannerAd(rel_live_ad, requireContext(), requireActivity());
         }
     }
 
@@ -230,7 +247,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
 
     private void alertDialogShow(final String compare) {
         if (compare.equalsIgnoreCase("time")) {
-            TimePickerCustomDialog timePickerCustomDialog = new TimePickerCustomDialog(requireContext() );
+            TimePickerCustomDialog timePickerCustomDialog = new TimePickerCustomDialog(requireContext() , R.style.DialogCustomTheme , requireActivity() );
             timePickerCustomDialog.show();
             timePickerCustomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -246,7 +263,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
 
         }
         else {
-            PerPickerCustomDialog perPickerCustomDialog = new PerPickerCustomDialog(requireContext());
+            PerPickerCustomDialog perPickerCustomDialog = new PerPickerCustomDialog(requireContext() , R.style.DialogCustomTheme , requireActivity());
             perPickerCustomDialog.setCanceledOnTouchOutside(false);
             perPickerCustomDialog.show();
             perPickerCustomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -263,6 +280,12 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.e("VIEW" , "onViewStateRestored");
+    }
+
     private void setFlashLight() {
         boolean isFlashAvailable = requireContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
         if (!isFlashAvailable) {
@@ -274,8 +297,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.img_settings:
-                SettingDialog settingDialog = new SettingDialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen ,getActivity());
-                settingDialog.show();
+                settingDialogShow();
                 break;
             case R.id.set_alarm:
                 setAlarm();
@@ -287,5 +309,16 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
                 alertDialogShow("time");
                 break;
         }
+    }
+
+    private void settingDialogShow() {
+        SettingDialog settingDialog = new SettingDialog(requireContext(), R.style.AppTheme ,getActivity());
+        settingDialog.show();
+        settingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                adShowCode();
+            }
+        });
     }
 }

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -56,6 +57,7 @@ public class BatteryAlarmService extends Service {
         registerReceiver(batteryStatusReceiver , filter_new);
 
         Constant.getInstance().isCableConnected = isConnected();
+        Toast.makeText(getApplicationContext() , " CHARGING " + isConnected() , Toast.LENGTH_SHORT).show();
 
         return START_STICKY;
     }

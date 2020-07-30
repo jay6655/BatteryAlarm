@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.adapter.LogHistoryAdapter;
 import com.example.batteryalarmclock.model.AlarmData;
+import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.templates.DBHelper;
+import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
 import java.util.List;
 
@@ -23,10 +25,12 @@ public class HistoryLogDialog extends Dialog {
 
     List<AlarmData> alarmDataArrayList;
     Context context;
+    Activity activity ;
 
     public HistoryLogDialog(Context context, int themeResId, Activity activity) {
         super(context ,themeResId );
         this.context = context ;
+        this.activity = activity;
     }
 
     @Override
@@ -58,4 +62,15 @@ public class HistoryLogDialog extends Dialog {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+        if (new SharedPreferencesApplication().getInAppDone(context)){
+            rel_live_ad.setVisibility(View.INVISIBLE);
+        }
+        else {
+            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
+        }
+    }
 }

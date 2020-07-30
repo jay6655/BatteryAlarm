@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
@@ -37,6 +38,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,7 +89,6 @@ public class EnterPinActivity extends AppCompatActivity {
     public int counPicture = 0 ;
 
     public static final int RESULT_BACK_PRESSED = RESULT_FIRST_USER;
-    //public static final int RESULT_TOO_MANY_TRIES = RESULT_FIRST_USER + 1;
     public static final String EXTRA_SET_PIN = "set_pin";
     public static final String EXTRA_FONT_TEXT = "textFont";
     public static final String EXTRA_FONT_NUM = "numFont";
@@ -153,6 +154,28 @@ public class EnterPinActivity extends AppCompatActivity {
 
         mSetPin = getIntent().getBooleanExtra(EXTRA_SET_PIN, false);
         when_toCall = getIntent().getStringExtra("WHEN_CALL");
+        Log.e("WHEN_TOCALL", when_toCall +  " ");
+
+        if (when_toCall != null){
+            if (when_toCall.equalsIgnoreCase("THEFTALARMSET")) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EnterPinActivity.this, R.style.alert_dialog);
+                builder.setTitle("Alert ");
+                builder.setMessage("Password Required for Theft Alarm dismiss ");
+                builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                //Creating dialog box
+                android.app.AlertDialog dialog = builder.create();
+                dialog.show();
+
+                Button btn1 = dialog.findViewById(android.R.id.button1);
+                btn1.setTextColor(EnterPinActivity.this.getResources().getColor(R.color.colorPrimary));
+            }
+        }
 
         if (mSetPin) {
             changeLayoutForSetPin();
@@ -329,7 +352,9 @@ public class EnterPinActivity extends AppCompatActivity {
             if (when_toCall != null) {
                 Log.e("AVT" , "when_toCall Not null" );
                 if (when_toCall.equalsIgnoreCase("TherftAlarm")){
+                    Log.e("AVT" , "when_toCall : " + when_toCall );
                     if (Constant.getInstance().mp != null) {
+                        Constant.getInstance().mp.stop();
                         Constant.getInstance().mp.release();
                         Constant.getInstance().mp = null ;
                     }
@@ -384,6 +409,21 @@ public class EnterPinActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        Log.e("AVT" , "Check Pin" );
+                        if (when_toCall != null) {
+                            Log.e("AVT" , "when_toCall Not null" );
+                            if (when_toCall.equalsIgnoreCase("TherftAlarm")){
+                                Log.e("AVT" , "when_toCall : " + when_toCall );
+                                if (Constant.getInstance().mp != null) {
+                                    Constant.getInstance().mp.stop();
+                                    Constant.getInstance().mp.release();
+                                    Constant.getInstance().mp = null ;
+                                }
+                                Intent myIntent = new Intent(EnterPinActivity.this, MainActivity.class);
+                                myIntent.putExtra("DONE" ,"DONEPWD");
+                                startActivity(myIntent);
+                            }
+                        }
                         finish();
                     }
                 }, 750);
@@ -499,6 +539,7 @@ public class EnterPinActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
+        Log.e("WHEN_TOCALL", when_toCall +  " ");
         if (when_toCall.equalsIgnoreCase("TherftAlarm")) {
             startBackgroundThread();
             if (textureView.isAvailable()) {
@@ -524,16 +565,18 @@ public class EnterPinActivity extends AppCompatActivity {
         if (when_toCall.equalsIgnoreCase("TherftAlarm")) {
             closeCamera();
             stopBackgroundThread();
-            if (mTryCount <= 3){
+            if (mTryCount < 3){
                 Log.e("DELETE " , mTryCount + " lastImageNo : " +lastImageNo + " IntruderCoun " + sh.getIntruderimagecount(EnterPinActivity.this));
-                for (int i = lastImageNo ; i <= sh.getIntruderimagecount(EnterPinActivity.this) ; i++){
-                    File myDir = new File(Environment.getExternalStorageDirectory() + "/.BATTERYALARM" + "/.intruder_images");
-                    String fname = "SAL-inruder" + i + ".jpg";
-                    File file = new File(myDir, fname);
-                    Log.e("DELETE ", "filePath : " + file.getAbsolutePath());
-                    new DBHelper(EnterPinActivity.this).deleteIntruder(file.getAbsolutePath());
-                    if (file.exists()) {
-                        file.delete();
+                if(lastImageNo != 0 ) {
+                    for (int i = lastImageNo; i <= sh.getIntruderimagecount(EnterPinActivity.this); i++) {
+                        File myDir = new File(Environment.getExternalStorageDirectory() + "/.BATTERYALARM" + "/.intruder_images");
+                        String fname = "SAL-inruder" + i + ".jpg";
+                        File file = new File(myDir, fname);
+                        Log.e("DELETE ", "filePath : " + file.getAbsolutePath());
+                        new DBHelper(EnterPinActivity.this).deleteIntruder(file.getAbsolutePath());
+                        if (file.exists()) {
+                            file.delete();
+                        }
                     }
                 }
             }
@@ -590,14 +633,7 @@ public class EnterPinActivity extends AppCompatActivity {
             cameraDevice = null;
         }
     };
-    /*final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
-        @Override
-        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
-            Toast.makeText(EnterPinActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-            createCameraPreview();
-        }
-    };*/
+
     protected void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
         mBackgroundThread.start();
@@ -641,8 +677,7 @@ public class EnterPinActivity extends AppCompatActivity {
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             // Orientation
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION , 270 );
             File myDir = new File(Environment.getExternalStorageDirectory() + "/.BATTERYALARM" + "/.intruder_images");
             if (!myDir.exists()){
                 myDir.mkdirs();
@@ -765,7 +800,7 @@ public class EnterPinActivity extends AppCompatActivity {
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Log.e(TAG, "openCamera X");

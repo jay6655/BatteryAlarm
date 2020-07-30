@@ -3,24 +3,35 @@ package com.example.batteryalarmclock.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
 import com.example.batteryalarmclock.R;
+import com.example.batteryalarmclock.templates.BillingManager;
+import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
+
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
     SharedPreferencesApplication sh = new SharedPreferencesApplication();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        Constant.getInstance().billingManager = new BillingManager(this, bilingmanager);
 
         final RelativeLayout splash_view = findViewById(R.id.splash_view);
         final RelativeLayout mainView = findViewById(R.id.mainView);
@@ -38,9 +49,14 @@ public class SplashActivity extends AppCompatActivity {
                 else{
                     splash_view.setVisibility(View.GONE);
                     mainView.setVisibility(View.VISIBLE);
+                    Constant.getInstance().billingManager = new BillingManager(SplashActivity.this, bilingmanager);
                 }
             }
         } , 3000);
+
+        TextView txt_privacy =  findViewById(R.id.term_service);
+        txt_privacy.setVisibility(View.VISIBLE);
+        txt_privacy.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button get_started = findViewById(R.id.get_started);
         get_started.setOnClickListener(new View.OnClickListener() {
@@ -54,4 +70,35 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
+
+    BillingManager.BillingUpdatesListener bilingmanager = new BillingManager.BillingUpdatesListener() {
+        @Override
+        public void onBillingClientSetupFinished() {
+            Log.e("dailog", "onBillingClientSetupFinished");
+            if(Constant.getInstance().billingManager != null){
+                Constant.getInstance().billingManager.queryPurchases();
+            }
+        }
+
+        @Override
+        public void onConsumeFinished(String token, int result) {
+            if (result == BillingClient.BillingResponseCode.OK) {
+                Log.e("dailog", "onConsumeFinished");
+            }
+        }
+
+
+        @Override
+        public void onPurchasesUpdated(List<Purchase> purchases) {
+            for (Purchase p : purchases) {
+                if (p.getSku().equals(Constant.getInstance().SKU_Removed_ads)) {
+                    sh.setInAppDone(SplashActivity.this , true);
+                }
+            }
+        }
+
+        @Override
+        public void onPurchasesFaild() {
+        }
+    };
 }

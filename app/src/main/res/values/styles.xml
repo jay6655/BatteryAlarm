@@ -16,6 +16,20 @@
 
         <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
 
+        <item name="android:soundEffectsEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="windowActionBar">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimAmount">1</item>
+        <item name="android:actionButtonStyle">@style/ActionButton</item>
+    </style>
+
+    <style name="ActionButton" parent="@android:style/Widget.ActionButton">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
     <style name="AppFullScreen" parent="Theme.AppCompat.Light.NoActionBar">
@@ -36,25 +50,32 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
-    <style name="full_screen_dialog" parent="android:Theme.Dialog">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">fill_parent</item>
-        <!-- No backgrounds, titles or window float -->
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowNoTitle">true</item>
-
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
+    <style name="DialogCustomTheme" parent="android:Theme.Holo.Dialog.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:focusableInTouchMode">true</item>
     </style>
 
-    <style name="alert_dialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="bottoNaviagtion">
+        <item name="fontFamily">@font/robotomedium</item>
+        <item name="theme">@style/Widget.Design.BottomNavigationView</item>
+    </style>
+
+    <style parent="Theme.AppCompat.Dialog.Alert" name="alert_dialog">
         <item name="android:background">@color/mainBg</item>
     </style>
 
-    <color name="ripple_clr">#808080</color>
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#ffffff</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f</item>
+    </style>
+
 
 </resources>

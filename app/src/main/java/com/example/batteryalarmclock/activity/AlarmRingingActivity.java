@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,16 +16,27 @@ import com.example.batteryalarmclock.R;
 import com.example.batteryalarmclock.model.AlarmData;
 import com.example.batteryalarmclock.receiver.AlarmReceiver;
 import com.example.batteryalarmclock.service.AlarmService;
+import com.example.batteryalarmclock.templates.Constant;
 import com.example.batteryalarmclock.util.SharedPreferencesApplication;
 
 public class AlarmRingingActivity extends AppCompatActivity {
     AlarmData alarm ;
+    TextView current_per ;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_alarm_ringing);
+
+        int battery = Constant.getInstance().getCurrentBatteryStutus(AlarmRingingActivity.this);
+
+        current_per = findViewById(R.id.current_per);
+        current_per.setText(battery + "%");
+
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setProgress(battery);
 
         Bundle bundleintent = getIntent().getBundleExtra("BUNDLE_EXTRA");
         if (bundleintent != null) {
@@ -43,5 +57,17 @@ public class AlarmRingingActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+        if (new SharedPreferencesApplication().getInAppDone(AlarmRingingActivity.this)){
+            rel_live_ad.setVisibility(View.INVISIBLE);
+        }
+        else {
+            Constant.getInstance().loadBannerAd(rel_live_ad, AlarmRingingActivity.this , AlarmRingingActivity.this );
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.batteryalarmclock.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -24,8 +25,8 @@ public class TimePickerCustomDialog extends Dialog {
     public static int selectedhour = 0 , selectedmin = 1 ;
     public static boolean selectvaluedonetime = false ;
 
-    public TimePickerCustomDialog(@NonNull Context context) {
-        super(context);
+    public TimePickerCustomDialog(Context context, int dialogCustomTheme, @NonNull Activity activity) {
+        super(context , dialogCustomTheme);
         this.context = context;
     }
 

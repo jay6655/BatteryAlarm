@@ -1,63 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@android:id/background">
-        <shape android:shape="ring">
-            <size android:width="80dp" android:height="80dp"/>
-            <solid android:color="#1F2227"/>
-        </shape>
-    </item>
-    <item android:id="@android:id/progress">
-        <clip>
-            <shape android:shape="ring">
-                <size android:width="80dp" android:height="80dp"/>
-                <solid android:color="@color/colorPrimary" />
-            </shape>
-        </clip>
-    </item>
-
-</layer-list>
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@android:id/secondaryProgress">
-        <shape
-            android:innerRadiusRatio="6"
-            android:shape="ring"
-            android:thicknessRatio="20.0"
-            android:useLevel="true">
-            <gradient
-                android:centerColor="#999999"
-                android:endColor="#999999"
-                android:startColor="#999999"
-                android:type="sweep" />
-        </shape>
-    </item>
-
-    <item android:id="@android:id/progress">
-        <rotate
-            android:fromDegrees="270"
-            android:pivotX="50%"
-            android:pivotY="50%"
-            android:toDegrees="270">
-
-            <shape
-                android:innerRadiusRatio="6"
-                android:shape="ring"
-                android:thicknessRatio="20.0"
-                android:useLevel="true">
-                <rotate
-                    android:fromDegrees="0"
-                    android:pivotX="50%"
-                    android:pivotY="50%"
-                    android:toDegrees="360" />
-
-                <gradient
-                    android:centerColor="#00FF00"
-                    android:endColor="#00FF00"
-                    android:startColor="#00FF00"
-                    android:type="sweep" />
-
-            </shape>
-        </rotate>
-    </item>
-</layer-list>-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="ring"
+    android:innerRadiusRatio="2.5"
+    android:thickness="8dp"
+    android:useLevel="false">
+    <solid android:color="#CCC" />
+</shape>

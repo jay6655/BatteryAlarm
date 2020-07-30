@@ -102,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(ALARM_TYPE ,  alarmData.getAlarm_type());
 
         long rowInsrted =  db.insert(TABLE_NAME,null, cv);
-        constant.lastID = alarmData.getUnique_id() ;
+        Constant.lastID = alarmData.getUnique_id() ;
 
         Log.e("DBHelper","ID IN DATABASE ::" +  constant.lastID);
 
@@ -144,8 +144,6 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-
-
                     alarmData.setUnique_id(cursor.getInt(cursor.getColumnIndex(UNIQUE_ID)));
                     alarmData.setCurrent_date_time(cursor.getString(cursor.getColumnIndex(CURRENT_DATE_TIME)));
                     alarmData.setCurrent_percentage(cursor.getInt(cursor.getColumnIndex(CURRENT_PERCENTAGE)));
@@ -154,9 +152,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     alarmData.setSelected_minute(cursor.getInt(cursor.getColumnIndex(SELECTED_MINUTE)));
                     alarmData.setAlarm_states(cursor.getString(cursor.getColumnIndex(ALARM_STATUS)));
                     alarmData.setAlarm_type(cursor.getString(cursor.getColumnIndex(ALARM_TYPE)));
-
-                   // alarmDataList.add(alarmData);
-
                 } while (cursor.moveToNext());
             }
         }
@@ -193,7 +188,6 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     AlarmData alarmData = new AlarmData();
-
                     alarmData.setUnique_id(cursor.getInt(cursor.getColumnIndex(UNIQUE_ID)));
                     alarmData.setCurrent_date_time(cursor.getString(cursor.getColumnIndex(CURRENT_DATE_TIME)));
                     alarmData.setCurrent_percentage(cursor.getInt(cursor.getColumnIndex(CURRENT_PERCENTAGE)));
@@ -204,11 +198,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     alarmData.setAlarm_type(cursor.getString(cursor.getColumnIndex(ALARM_TYPE)));
                     alarmData.setUnplugg_percentage(cursor.getInt(cursor.getColumnIndex(UNPLUGG_PERCENTAGE)));
                     alarmData.setUnplagg_date_time(cursor.getString(cursor.getColumnIndex(UNPLUGG_DATE_TIME)));
-
                     alarmDataList.add(alarmData);
-
                     Log.e("All : " , alarmData.toString() );
-
                 } while (cursor.moveToNext());
             }
         }
@@ -228,6 +219,13 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(INTRUDER_IMAGE_PATH, intruder.getIntruder_path());
         // Inserting Row
         db.insert(TABLE_INTRUDER, null, values);
+    }
+
+    //All Intruder Data Delate
+    public void deleteAllIntriderData(){
+        SQLiteDatabase db= this.getWritableDatabase();
+        db.execSQL("delete from "+ TABLE_INTRUDER);
+        db.close();
     }
 
     // Getting All Intruder Data
