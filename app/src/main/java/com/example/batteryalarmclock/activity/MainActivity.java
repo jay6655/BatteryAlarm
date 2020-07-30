@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.startService(new Intent(MainActivity.this, BatteryAlarmService.class));
         }
 
+        //Changes 
+
         Log.e("AVT" , "Main isSetTherftAlarm : " + Constant.getInstance().isSetTherftAlarm );
         if (Constant.getInstance().isSetTherftAlarm) {
             Log.e("AVT" , "Main If called isSetTherftAlarm : " + Constant.getInstance().isSetTherftAlarm );
