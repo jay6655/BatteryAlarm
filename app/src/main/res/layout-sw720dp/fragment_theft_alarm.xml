@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp">
+        android:layout_height="@dimen/_25sdp">
 
     <ImageView
         android:padding="@dimen/_5sdp"
@@ -21,7 +21,7 @@
     <TextView
         android:gravity="center_vertical"
         android:fontFamily="@font/robotomedium"
-        android:textSize="@dimen/_15sdp"
+        android:textSize="@dimen/_11ssp"
         android:text="@string/title_dashboard"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
@@ -40,10 +40,10 @@
     <RelativeLayout
         android:layout_below="@+id/header"
         android:id="@+id/battery_view"
-        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_35sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_70sdp">
+        android:layout_height="@dimen/_55sdp">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -59,8 +59,8 @@
             android:fontFamily="@font/robotoregular"
             android:id="@+id/txt_per"
             android:includeFontPadding="false"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:textSize="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_25sdp"
             android:text="@string/_30"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:layout_alignParentBottom="true"
             android:includeFontPadding="false"
             android:layout_marginTop="@dimen/_10sdp"
@@ -102,7 +102,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="@string/txt_plugg"
-        android:textSize="@dimen/_12sdp" />
+        android:textSize="@dimen/_11ssp" />
 
     <RelativeLayout
         android:layout_above="@+id/txt_message"
@@ -112,8 +112,8 @@
 
         <ImageView
             android:id="@+id/img_plugg"
-            android:layout_height="@dimen/_120sdp"
-            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_100sdp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_center"
@@ -131,20 +131,20 @@
         android:layout_marginHorizontal="@dimen/_30sdp"
         android:gravity="center"
         android:text="@string/txt_message"
-        android:textSize="@dimen/_13sdp" />
+        android:textSize="@dimen/_12ssp" />
 
     <Button
         android:fontFamily="@font/robotomedium"
         android:layout_above="@+id/rel_live_ad"
-        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_35sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/ic_button_bg"
-        android:textSize="@dimen/_16sdp"
+        android:textSize="@dimen/_12sdp"
         android:id="@+id/activate_alarm"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_height="@dimen/_25sdp"
         android:text="@string/activate_alarm" />
 
     <RelativeLayout

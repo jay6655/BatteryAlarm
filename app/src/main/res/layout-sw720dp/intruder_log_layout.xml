@@ -3,7 +3,7 @@
     android:background="@color/mainBg"
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <RelativeLayout
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_25sdp"
         android:padding="@dimen/_5sdp"
         android:gravity="center"
         android:clickable="true"
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/img_photo"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:src="@drawable/ic_launcher_background" />
 
         <LinearLayout
@@ -30,7 +30,7 @@
 
             <TextView
                 android:fontFamily="@font/robotoregular"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
                 android:id="@+id/txt_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 
             <TextView
                 android:fontFamily="@font/robotoregular"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
                 android:id="@+id/txt_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -310,7 +310,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:gravity="center_vertical"
             android:id="@+id/sw_slient"
             android:layout_alignParentEnd="true"
@@ -358,7 +358,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:gravity="center_vertical"
             android:id="@+id/sw_flash"
             android:layout_alignParentEnd="true"

@@ -26,13 +26,14 @@
         android:visibility="invisible">
 
         <TextView
-            android:layout_marginTop="@dimen/_25sdp"
+            android:fontFamily="@font/robotoregular"
+            android:layout_marginTop="@dimen/_15sdp"
             android:id="@+id/wel_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/welcome_str"
-            android:textSize="@dimen/_25sdp" />
+            android:textSize="@dimen/_20sdp" />
 
         <TextView
             android:fontFamily="@font/robotobold"
@@ -42,7 +43,7 @@
             android:layout_below="@+id/wel_txt"
             android:gravity="center"
             android:text="@string/battery_str"
-            android:textSize="@dimen/_25sdp"
+            android:textSize="@dimen/_20sdp"
             />
         <RelativeLayout
             android:layout_above="@+id/above_view"
@@ -55,7 +56,7 @@
                 android:id="@+id/splse_icon"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_icon_splsh"
-                android:layout_width="@dimen/_200sdp"
+                android:layout_width="@dimen/_150sdp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/app_name" />
 
@@ -64,9 +65,8 @@
 
         <LinearLayout
             android:id="@+id/above_view"
-            android:layout_marginHorizontal="@dimen/_45sdp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_above="@+id/below_view"
             android:layout_centerHorizontal="true"
             android:background="@drawable/splash_view_bg"
@@ -76,26 +76,26 @@
             <ImageView
                 android:id="@+id/img1"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_splsh_icon" />
 
             <TextView
+                android:fontFamily="@font/robotoregular"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:textSize="@dimen/_16sdp"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/full_battery_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_13sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:id="@+id/below_view"
-            android:layout_marginHorizontal="@dimen/_45sdp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_above="@+id/msg_view"
             android:layout_centerHorizontal="true"
             android:background="@drawable/splash_view_bg"
@@ -105,45 +105,50 @@
             <ImageView
                 android:id="@+id/img2"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_splsh_icon" />
 
             <TextView
+                android:fontFamily="@font/robotoregular"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:textSize="@dimen/_16sdp"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/anti_theft_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <TextView
+            android:fontFamily="@font/robotolight"
             android:id="@+id/msg_view"
             android:gravity="center"
-            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:layout_above="@+id/get_started"
             android:layout_marginHorizontal="@dimen/_30sdp"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_11ssp"
             android:text="@string/msg_splash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/robotobold"
+            android:layout_marginHorizontal="@dimen/_43sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/ic_button_bg"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_12sdp"
             android:id="@+id/get_started"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_28sdp"
             android:layout_above="@+id/term_service"
             android:text="@string/get_started" />
 
         <TextView
-            android:textSize="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_20sdp"
+            android:fontFamily="@font/robotolight"
+            android:textSize="@dimen/_11ssp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:text="@string/txtDescriptionGDPR"

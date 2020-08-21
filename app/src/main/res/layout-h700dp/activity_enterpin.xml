@@ -43,7 +43,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pass_img"/>
 
-        <com.example.lockscreen.IndicatorDots
+        <com.nilapps.lockscreen.IndicatorDots
             android:id="@+id/indicator_dots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/indicator_dots" />
 
-        <com.example.lockscreen.PinLockView
+        <com.nilapps.lockscreen.PinLockView
             android:id="@+id/pinlockView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

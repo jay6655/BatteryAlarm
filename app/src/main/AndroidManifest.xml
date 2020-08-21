@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.batteryalarmclock" >
+    package="com.nilapps.batteryalarm" >
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -62,7 +62,7 @@
             android:theme="@style/AppFullScreen"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.example.lockscreen.EnterPinActivity"
+        <activity android:name="com.nilapps.lockscreen.EnterPinActivity"
             android:theme="@style/AppFullScreen"
             android:screenOrientation="portrait" />
 

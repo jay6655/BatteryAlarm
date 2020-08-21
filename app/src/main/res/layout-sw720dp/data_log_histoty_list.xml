@@ -24,7 +24,7 @@
             android:progress="80" />
 
         <TextView
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_12ssp"
             android:id="@+id/txt_per"
             android:layout_alignParentStart="true"
             android:gravity="center"
@@ -40,11 +40,11 @@
             android:layout_height="wrap_content"
             android:text="April 30, 2020"
             android:textColor="#FFC800"
-            android:layout_marginStart="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:textSize="@dimen/_11sdp" />
         <LinearLayout
             android:layout_below="@+id/txt_date"
-            android:layout_marginStart="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_toEndOf="@+id/total_progress"
             android:orientation="vertical"
             android:layout_width="wrap_content"

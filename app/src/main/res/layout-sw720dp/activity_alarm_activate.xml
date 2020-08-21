@@ -19,13 +19,13 @@
     <TextView
         android:id="@+id/current_per"
        android:layout_centerInParent="true"
-        android:textSize="@dimen/_80sdp"
+        android:textSize="@dimen/_50sdp"
         android:text="80%"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_15sdp"
         android:text="@string/charging"
         android:layout_marginTop="@dimen/_40sdp"
        android:layout_centerHorizontal="true"
@@ -37,7 +37,7 @@
         android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/current_per"
-        android:textSize="@dimen/_18sdp"
+        android:textSize="@dimen/_15sdp"
         android:text="@string/eastimated_finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

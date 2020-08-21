@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Battery Alarm Clock</string>
+    <string name="app_name">Battery Alarm</string>
 
     <!--test id-->
     <string name="mob_ad_id">ca-app-pub-3940256099942544~3347511713</string>
@@ -94,6 +94,7 @@
     <string name="txt_failed">Purchase Failed</string>
     <string name="fail_msg">No money was taken from account. Please try again.</string>
     <string name="intruder_logs">Intruder Logs</string>
+    <string name="select_time">Select Time</string>
 
 
 </resources>

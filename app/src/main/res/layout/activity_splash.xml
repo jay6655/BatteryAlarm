@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:visibility="gone"
+        android:visibility="invisible"
         android:id="@+id/splash_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -55,8 +55,8 @@
                 android:id="@+id/splse_icon"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_icon_splsh"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
                 android:contentDescription="@string/app_name" />
 
         </RelativeLayout>
@@ -64,7 +64,7 @@
 
         <LinearLayout
             android:id="@+id/above_view"
-            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
             android:layout_above="@+id/below_view"
@@ -90,12 +90,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:id="@+id/below_view"
-            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_above="@+id/msg_view"
             android:layout_centerHorizontal="true"
             android:background="@drawable/splash_view_bg"
@@ -121,28 +121,29 @@
         <TextView
             android:id="@+id/msg_view"
             android:gravity="center"
-            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:layout_above="@+id/get_started"
             android:layout_marginHorizontal="@dimen/_30sdp"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_12sdp"
             android:text="@string/msg_splash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
+            android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/ic_button_bg"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_14sdp"
             android:id="@+id/get_started"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_above="@+id/term_service"
             android:text="@string/get_started" />
 
         <TextView
-            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:text="@string/txtDescriptionGDPR"

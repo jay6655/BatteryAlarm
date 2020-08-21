@@ -64,7 +64,7 @@
                 android:background="@drawable/boarder_rate"
                 android:layout_below="@+id/msg_desc"
                 android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_105sdp">
+                android:layout_height="@dimen/_100sdp">
 
                 <ImageView
                     android:id="@+id/img_sad"
@@ -77,7 +77,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:textSize="@dimen/_14ssp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
                     android:gravity="center"
                     android:text="@string/it_s_ok"
                     android:layout_below="@+id/img_sad"
@@ -94,7 +94,7 @@
                 android:background="@drawable/boarder_rate_happy"
                 android:layout_below="@+id/msg_desc"
                 android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_105sdp">
+                android:layout_height="@dimen/_100sdp">
 
                 <ImageView
                     android:id="@+id/img_happy"
@@ -107,14 +107,14 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:textSize="@dimen/_14ssp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
                     android:gravity="center"
                     android:text="@string/loved_it"
                     android:layout_below="@+id/img_happy"
                     android:id="@+id/txt_happy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-        </RelativeLayout>
+            </RelativeLayout>
 
 
         </RelativeLayout>

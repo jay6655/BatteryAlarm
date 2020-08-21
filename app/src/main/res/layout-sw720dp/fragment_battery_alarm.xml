@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp">
+        android:layout_height="@dimen/_25sdp">
         <ImageView
             android:padding="@dimen/_5sdp"
             android:layout_alignParentStart="true"
@@ -20,7 +20,7 @@
         <TextView
             android:gravity="center_vertical"
             android:fontFamily="@font/robotomedium"
-            android:textSize="@dimen/_13sdp"
+            android:textSize="@dimen/_11ssp"
             android:text="@string/title_home"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
@@ -42,10 +42,10 @@
     <RelativeLayout
         android:id="@+id/battery_view"
         android:layout_marginHorizontal="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_3sdp"
         android:layout_below="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp">
+        android:layout_height="@dimen/_50sdp">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -61,8 +61,8 @@
             android:fontFamily="@font/robotoregular"
             android:id="@+id/txt_per"
             android:includeFontPadding="false"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:textSize="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_25sdp"
             android:text="@string/_30"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
 
         <TextView
             android:fontFamily="@font/robotoregular"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:layout_alignParentBottom="true"
             android:includeFontPadding="false"
             android:layout_marginTop="@dimen/_10sdp"
@@ -96,9 +96,9 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginTop="@dimen/_3sdp"
         android:id="@+id/remin_view"
         android:layout_marginHorizontal="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_below="@+id/battery_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -106,20 +106,20 @@
         <TextView
             android:fontFamily="@font/robotomedium"
             android:id="@+id/time_remain"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_11ssp"
             android:text="@string/time_remaining"
             android:textColor="#919191"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
-            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_1sdp"
             android:id="@+id/above_view"
             android:orientation="horizontal"
             android:layout_below="@+id/time_remain"
             android:weightSum="2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30sdp">
+            android:layout_height="@dimen/_25sdp">
 
             <LinearLayout
                 android:padding="@dimen/_3sdp"
@@ -140,7 +140,7 @@
 
                 <TextView
                     android:fontFamily="@font/robotoregular"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_11ssp"
                     android:gravity="center"
                     android:text="@string/phone"
                     android:layout_weight="2"
@@ -150,7 +150,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_9ssp"
                     android:layout_gravity="center"
                     android:text="1h"
                     android:layout_weight="1"
@@ -183,7 +183,7 @@
 
                 <TextView
                     android:fontFamily="@font/robotoregular"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_11ssp"
                     android:gravity="center"
                     android:text="@string/movie"
                     android:layout_weight="2"
@@ -193,7 +193,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_9ssp"
                     android:layout_gravity="center"
                     android:text="1h"
                     android:layout_weight="1"
@@ -208,7 +208,7 @@
             android:layout_below="@+id/above_view"
             android:weightSum="2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30sdp">
+            android:layout_height="@dimen/_25sdp">
 
             <LinearLayout
                 android:padding="@dimen/_3sdp"
@@ -229,7 +229,7 @@
 
                 <TextView
                     android:fontFamily="@font/robotoregular"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_11ssp"
                     android:gravity="center"
                     android:text="@string/music"
                     android:layout_weight="2"
@@ -239,7 +239,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_9ssp"
                     android:layout_gravity="center"
                     android:text="1h"
                     android:layout_weight="1"
@@ -272,7 +272,7 @@
 
                 <TextView
                     android:fontFamily="@font/robotoregular"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_11ssp"
                     android:gravity="center"
                     android:text="@string/camera"
                     android:layout_weight="2"
@@ -282,7 +282,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="@dimen/_9ssp"
                     android:layout_gravity="center"
                     android:text="1h"
                     android:layout_weight="1"
@@ -307,10 +307,10 @@
         android:layout_marginHorizontal="@dimen/_30sdp"
         android:layout_below="@+id/view1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp">
+        android:layout_height="@dimen/_23sdp">
         <TextView
             android:fontFamily="@font/robotoregular"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_11ssp"
             android:gravity="center"
             android:text="@string/alarm_sound_slient"
             android:id="@+id/txt_slient"
@@ -319,8 +319,8 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:padding="@dimen/_8sdp"
-            android:scaleY="1.5"
-            android:scaleX="1.5"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
             android:theme="@style/SCBSwitch"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
@@ -335,15 +335,16 @@
         android:layout_marginHorizontal="@dimen/_30sdp"
         android:layout_below="@+id/slient_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp">
+        android:layout_height="@dimen/_23sdp">
+
         <TextView
+            android:id="@+id/txt_ring"
+            android:layout_width="145dp"
+            android:layout_height="match_parent"
             android:fontFamily="@font/robotoregular"
-            android:textSize="@dimen/_12sdp"
             android:gravity="center"
             android:text="@string/alarm_ring"
-            android:id="@+id/txt_ring"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:textSize="@dimen/_11ssp" />
 
         <TextView
             android:gravity="center_vertical"
@@ -359,10 +360,10 @@
         android:layout_marginHorizontal="@dimen/_30sdp"
         android:layout_below="@+id/ring_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp">
+        android:layout_height="@dimen/_23sdp">
         <TextView
             android:fontFamily="@font/robotoregular"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_11ssp"
             android:gravity="center"
             android:text="@string/alarm_with_flashlight"
             android:id="@+id/txt_flash"
@@ -371,8 +372,8 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:padding="@dimen/_8sdp"
-            android:scaleY="1.5"
-            android:scaleX="1.5"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
             android:theme="@style/SCBSwitch"
             android:gravity="center_vertical"
             android:id="@+id/sw_flash"
@@ -392,7 +393,7 @@
         android:layout_height="1dp"/>
 
     <RadioGroup
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
         android:layout_below="@+id/view2"
         android:id="@+id/alarm_button_view"
         android:layout_width="match_parent"
@@ -444,12 +445,13 @@
     </RadioGroup>
 
     <RelativeLayout
+        android:layout_marginTop="@dimen/_2sdp"
         android:visibility="invisible"
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_30sdp"
         android:id="@+id/persantage_view"
         android:layout_below="@+id/alarm_button_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp">
+        android:layout_height="@dimen/_20sdp">
 
         <TextView
             android:fontFamily="@font/robotoregular"
@@ -475,10 +477,10 @@
         android:visibility="visible"
         android:layout_marginHorizontal="@dimen/_30sdp"
         android:id="@+id/timer_view"
-        android:layout_marginTop="@dimen/_1sdp"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_below="@+id/alarm_button_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_25sdp">
+        android:layout_height="@dimen/_20sdp">
 
         <TextView
             android:fontFamily="@font/robotoregular"
@@ -501,16 +503,16 @@
     </RelativeLayout>
 
     <Button
-        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_35sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/ic_button_bg"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="@dimen/_12sdp"
         android:fontFamily="@font/robotobold"
         android:id="@+id/set_alarm"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_height="@dimen/_25sdp"
         android:layout_above="@+id/rel_live_ad"
         android:text="@string/set_alarm" />
 
