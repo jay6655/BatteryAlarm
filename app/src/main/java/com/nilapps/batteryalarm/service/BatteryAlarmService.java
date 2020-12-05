@@ -9,18 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.IBinder;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.nilapps.batteryalarm.R;
-import com.nilapps.batteryalarm.activity.MainActivity;
-import com.nilapps.batteryalarm.model.IntruderData;
 import com.nilapps.batteryalarm.receiver.BatteryStatusReceiver;
 import com.nilapps.batteryalarm.receiver.PowerConnctedReceiver;
 import com.nilapps.batteryalarm.templates.Constant;

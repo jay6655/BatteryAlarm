@@ -1,11 +1,9 @@
 package com.nilapps.batteryalarm.templates;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
@@ -18,12 +16,10 @@ import com.nilapps.batteryalarm.model.AlarmData;
 
 public class Constant {
     public static Constant constant;
-    public boolean isCableConnected  = false;
+    public boolean isCableConnected  = false , isAdshow = false ,isSetTherftAlarm = false , ismopubshow , isNotificationShow = true;
     public AlarmData alarmDatabackup;
     public static int lastID = 0 ;
-    public boolean isSetTherftAlarm = false;
     public int adcountfailbanner = 0 ;
-    public boolean ismopubshow;
     public com.nilapps.batteryalarm.templates.Admobe_Banner_controller ads_controller = new Admobe_Banner_controller();
     public BillingManager billingManager;
     public String SKU_Removed_ads ="com.nilapps.battery.alarm.removead";
@@ -48,51 +44,53 @@ public class Constant {
     }
 
     public void loadBannerAd(final RelativeLayout livead , Context context , Activity activity) {
-        if (this.ads_controller.checkAddviewNull() && checkInternetConnection(context) && !constant.ismopubshow) {
-            this.ads_controller.add_init(activity);
-            livead.removeAllViews();
-            livead.addView(this.ads_controller.mAdView);
-            this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner(){
-
-                @Override
-                public void onAdFailedToLoad(int n) {
-                    livead.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    livead.setVisibility(View.VISIBLE);
-                }
-            });
-            return;
-        }
-        if (checkInternetConnection(context)) {
-            if (this.ads_controller.isAdsshowingornot() && constant.ismopubshow) {
-                livead.setVisibility(View.VISIBLE);
-                livead.removeAllViews();
-                if (this.ads_controller.mAdView.getParent() != null) {
-                    ((ViewGroup)this.ads_controller.mAdView.getParent()).removeView(this.ads_controller.mAdView);
-                }
+        if (isAdshow) {
+            if (this.ads_controller.checkAddviewNull() && checkInternetConnection(context) && !constant.ismopubshow) {
+                this.ads_controller.add_init(activity);
                 livead.removeAllViews();
                 livead.addView(this.ads_controller.mAdView);
+                this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner() {
+
+                    @Override
+                    public void onAdFailedToLoad(int n) {
+                        livead.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        livead.setVisibility(View.VISIBLE);
+                    }
+                });
                 return;
             }
-            livead.setVisibility(View.VISIBLE);
-            this.ads_controller.add_init(activity);
-            livead.removeAllViews();
-            livead.addView(this.ads_controller.mAdView);
-            this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner(){
-                @Override
-                public void onAdFailedToLoad(int n) {
-                    Log.e("Load" , "Failed ");
-                    livead.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onAdLoaded() {
+            if (checkInternetConnection(context)) {
+                if (this.ads_controller.isAdsshowingornot() && constant.ismopubshow) {
                     livead.setVisibility(View.VISIBLE);
+                    livead.removeAllViews();
+                    if (this.ads_controller.mAdView.getParent() != null) {
+                        ((ViewGroup) this.ads_controller.mAdView.getParent()).removeView(this.ads_controller.mAdView);
+                    }
+                    livead.removeAllViews();
+                    livead.addView(this.ads_controller.mAdView);
+                    return;
                 }
-            });
+                livead.setVisibility(View.VISIBLE);
+                this.ads_controller.add_init(activity);
+                livead.removeAllViews();
+                livead.addView(this.ads_controller.mAdView);
+                this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner() {
+                    @Override
+                    public void onAdFailedToLoad(int n) {
+                        Log.e("Load", "Failed ");
+                        livead.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        livead.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
         }
     }
 

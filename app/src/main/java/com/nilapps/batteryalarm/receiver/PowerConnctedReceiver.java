@@ -11,7 +11,6 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -56,7 +55,6 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
             if (isCharging) {
                 Log.e("RECEIVER ", "CONNECTED isCharging : Constant.lastID " + Constant.lastID);
                 constant.isCableConnected = true;
-                Toast.makeText(context, " CONNECTED isCharging ", Toast.LENGTH_SHORT).show();
                 String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
                 if (sh.getAlarmAlwardySet(context)) {
                     if (set_alarm != null) {
@@ -96,7 +94,6 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
             } else {
                 Log.e("RECEIVER ", "DISCONNECTED");
                 constant.isCableConnected = false;
-                Toast.makeText(context, " DISCONNECTED  isCharging", Toast.LENGTH_SHORT).show();
                 if (Constant.lastID != 0) {
                     String set_alarm = dbHelper.getPerticularAlarmType(String.valueOf(Constant.lastID));
                     if (sh.getAlarmAlwardySet(context)) {
@@ -148,24 +145,27 @@ public class PowerConnctedReceiver extends BroadcastReceiver {
     }
 
     private void showNotification(Context context, String title , String message) {
-        createNotificationChannel(context);
-        // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        if (constant.isNotificationShow) {
+            constant.isNotificationShow = false;
+            createNotificationChannel(context);
+            // Create an explicit intent for an Activity in your app
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                // Set the intent that will fire when the user taps the notification
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    // Set the intent that will fire when the user taps the notification
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(123456, builder.build());
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(123456, builder.build());
+        }
     }
 
 

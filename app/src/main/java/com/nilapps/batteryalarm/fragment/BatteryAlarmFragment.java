@@ -259,6 +259,7 @@ public class BatteryAlarmFragment extends Fragment implements View.OnClickListen
         }
         DBHelper dbHelper = new DBHelper(requireContext());
         dbHelper.addAlarm(alarmData);
+        constant.isNotificationShow = true;
     }
 
     private void alertDialogShow(final String compare) {
