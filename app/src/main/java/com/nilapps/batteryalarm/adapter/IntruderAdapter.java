@@ -13,9 +13,10 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.dialog.FullScreenImageDialog;
 import com.nilapps.batteryalarm.model.IntruderData;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 

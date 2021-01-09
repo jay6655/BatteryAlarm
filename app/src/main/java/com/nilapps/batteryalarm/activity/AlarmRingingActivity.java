@@ -12,13 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nilapps.batteryalarm.R;
 import com.nilapps.batteryalarm.model.AlarmData;
 import com.nilapps.batteryalarm.receiver.AlarmReceiver;
 import com.nilapps.batteryalarm.service.AlarmService;
 import com.nilapps.batteryalarm.service.WakeLocker;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 public class AlarmRingingActivity extends AppCompatActivity {
     AlarmData alarm ;
@@ -64,12 +64,12 @@ public class AlarmRingingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
-        if (new SharedPreferencesApplication().getInAppDone(AlarmRingingActivity.this)){
-            rel_live_ad.setVisibility(View.INVISIBLE);
-        }
-        else {
-            Constant.getInstance().loadBannerAd(rel_live_ad, AlarmRingingActivity.this , AlarmRingingActivity.this );
-        }
+//        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+//        if (new SharedPreferencesApplication().getInAppDone(AlarmRingingActivity.this)){
+//            rel_live_ad.setVisibility(View.INVISIBLE);
+//        }
+//        else {
+//            Constant.getInstance().loadBannerAd(rel_live_ad, AlarmRingingActivity.this , AlarmRingingActivity.this );
+//        }
     }
 }

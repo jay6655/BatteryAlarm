@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.activity.ActivateAlarmActivity;
 import com.nilapps.batteryalarm.dialog.SettingDialog;
 import com.nilapps.batteryalarm.templates.Constant;
@@ -124,12 +124,12 @@ public class TheftAlarmFragment extends Fragment {
     }
 
     private void adShowCode(){
-        RelativeLayout rel_live_ad = rootView.findViewById(R.id.rel_live_ad);
-        if (sh.getInAppDone(requireContext())){
-            rel_live_ad.setVisibility(View.INVISIBLE);
-        }
-        else {
-            Constant.getInstance().loadBannerAd(rel_live_ad, requireContext(), requireActivity());
-        }
+//        RelativeLayout rel_live_ad = rootView.findViewById(R.id.rel_live_ad);
+//        if (sh.getInAppDone(requireContext())){
+//            rel_live_ad.setVisibility(View.INVISIBLE);
+//        }
+//        else {
+//            Constant.getInstance().loadBannerAd(rel_live_ad, requireContext(), requireActivity());
+//        }
     }
 }

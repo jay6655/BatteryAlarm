@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.adapter.IntruderAdapter;
 import com.nilapps.batteryalarm.model.IntruderData;
 import com.nilapps.batteryalarm.templates.Constant;
@@ -63,15 +63,15 @@ public class IntruderLogDialog extends Dialog {
     @Override
     protected void onStart() {
         super.onStart();
-        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
-        RelativeLayout rel_inapp = findViewById(R.id.rel_inapp);
-        if (new SharedPreferencesApplication().getInAppDone(context)){
-            rel_live_ad.setVisibility(View.INVISIBLE);
-            rel_inapp.setVisibility(View.GONE);
-        }
-        else {
-            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
-            rel_inapp.setVisibility(View.VISIBLE);
-        }
+//        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+//        RelativeLayout rel_inapp = findViewById(R.id.rel_inapp);
+//        if (new SharedPreferencesApplication().getInAppDone(context)){
+//            rel_live_ad.setVisibility(View.INVISIBLE);
+//            rel_inapp.setVisibility(View.GONE);
+//        }
+//        else {
+//            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
+//            rel_inapp.setVisibility(View.VISIBLE);
+//        }
     }
 }

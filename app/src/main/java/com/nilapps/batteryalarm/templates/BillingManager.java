@@ -20,9 +20,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class BillingManager implements PurchasesUpdatedListener {
 
@@ -31,8 +29,6 @@ public class BillingManager implements PurchasesUpdatedListener {
     boolean isServiceConnected = false;
     int billingClientResponseCode;
     public BillingUpdatesListener billingUpdatesListener;
-    private String TAG = "BillingManager";
-    private Set<String> mTokensToBeConsumed;
 
     public BillingManager(Activity activity, final BillingUpdatesListener billingUpdatesListener) {
 
@@ -83,20 +79,16 @@ public class BillingManager implements PurchasesUpdatedListener {
                     }
                 }, 1000);
             }
-            //Log.e(TAG , " Ok responce Done ");
         } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-            //Log.e(TAG, "onPurchasesUpdated() – user cancelled the purchase flow – skipping");
             billingUpdatesListener.onPurchasesFaild();
         } else if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_UNAVAILABLE){
             billingUpdatesListener.onPurchasesFaild();
         } else {
             billingUpdatesListener.onPurchasesFaild();
-            //Log.e(TAG, "onPurchasesUpdated() got unknown resultCode: " + billingResult.getResponseCode());
         }
     }
 
     public void handlepurchaseACK(Purchase purchase) {
-        //Log.e("mainActivity", "handle  : " + purchase.getPurchaseToken());
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
                 AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder().
@@ -104,7 +96,6 @@ public class BillingManager implements PurchasesUpdatedListener {
                 billingClient.acknowledgePurchase(params, new AcknowledgePurchaseResponseListener() {
                     @Override
                     public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                        //Log.e("MainActivity", "handleresponse :" + billingResult);
                     }
                 });
             }
@@ -131,7 +122,6 @@ public class BillingManager implements PurchasesUpdatedListener {
         Runnable queryToExecute = new Runnable() {
             @Override
             public void run() {
-                long time = System.currentTimeMillis();
                 Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
                 if (areSubscriptionsSupported()) {
                     Purchase.PurchasesResult subscriptionResult
@@ -143,10 +133,9 @@ public class BillingManager implements PurchasesUpdatedListener {
                     } else {
                         // Handle any error response codes.
                     }
-                } else if (purchasesResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    // Skip subscription purchases query as they are not supported.
                 } else {
-                    // Handle any other error response codes.
+                    purchasesResult.getResponseCode();// Skip subscription purchases query as they are not supported.
+// Handle any other error response codes.
                 }
                 onQueryPurchasesFinished(purchasesResult);
             }
@@ -168,14 +157,10 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     public boolean areSubscriptionsSupported() {
         int responseCode = billingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS).getResponseCode();
-        if (responseCode != BillingClient.BillingResponseCode.OK) {
-            Log.e(TAG, "areSubscriptionsSupported() got an error response: " + responseCode);
-        }
         return responseCode == BillingClient.BillingResponseCode.OK;
     }
 
-    public void initiatePurchaseFlow(final List<String> skuList, final ArrayList<String> oldSkus,
-                                     final @BillingClient.SkuType String billingType) {
+    public void initiatePurchaseFlow(final List<String> skuList, final @BillingClient.SkuType String billingType) {
         Runnable purchaseFlowRequest = new Runnable() {
             @Override
             public void run() {
@@ -215,7 +200,6 @@ public class BillingManager implements PurchasesUpdatedListener {
                 }
             }
         };
-
         billingClient.consumeAsync(consumeParams, listener);
     }
 }

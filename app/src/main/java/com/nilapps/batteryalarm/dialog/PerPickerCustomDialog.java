@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.templates.Constant;
 
 import java.util.ArrayList;

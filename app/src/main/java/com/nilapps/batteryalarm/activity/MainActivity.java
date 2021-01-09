@@ -14,18 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.fragment.BatteryAlarmFragment;
 import com.nilapps.batteryalarm.fragment.TheftAlarmFragment;
 import com.nilapps.batteryalarm.service.BatteryAlarmService;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;
@@ -35,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navView = findViewById(R.id.nav_view);
-
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
 
         if(!isMyServiceRunning(BatteryAlarmService.class)) {
             MainActivity.this.startService(new Intent(MainActivity.this, BatteryAlarmService.class));

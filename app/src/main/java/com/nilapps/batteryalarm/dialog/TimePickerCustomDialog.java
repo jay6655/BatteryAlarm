@@ -14,7 +14,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

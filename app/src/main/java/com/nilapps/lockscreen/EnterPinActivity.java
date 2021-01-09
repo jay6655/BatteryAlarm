@@ -47,7 +47,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.activity.MainActivity;
 import com.nilapps.batteryalarm.model.AlarmData;
 import com.nilapps.batteryalarm.model.IntruderData;

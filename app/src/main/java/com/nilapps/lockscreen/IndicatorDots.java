@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.IntDef;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

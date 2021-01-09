@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.templates.BillingManager;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
@@ -50,8 +50,7 @@ public class RemoveAdsDialog extends Dialog {
                         if (constant.checkInternetConnection(context)) {
                             List<String> skulist = new ArrayList<>();
                             skulist.add(constant.SKU_Removed_ads);
-                            constant.billingManager.initiatePurchaseFlow(skulist,
-                                    null, BillingClient.SkuType.INAPP);
+                            constant.billingManager.initiatePurchaseFlow(skulist, BillingClient.SkuType.INAPP);
                             close();
                         }else{
                             showalert(context.getString(R.string.alert) , context.getString(R.string.no_internet));

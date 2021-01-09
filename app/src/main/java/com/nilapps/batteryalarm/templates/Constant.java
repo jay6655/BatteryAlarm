@@ -1,6 +1,5 @@
 package com.nilapps.batteryalarm.templates;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,19 +7,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.nilapps.batteryalarm.model.AlarmData;
 
 public class Constant {
     public static Constant constant;
-    public boolean isCableConnected  = false , isAdshow = false ,isSetTherftAlarm = false , ismopubshow , isNotificationShow = true;
+    public boolean isCableConnected  = false  ,isSetTherftAlarm = false , isNotificationShow = true;
     public AlarmData alarmDatabackup;
     public static int lastID = 0 ;
-    public int adcountfailbanner = 0 ;
-    public com.nilapps.batteryalarm.templates.Admobe_Banner_controller ads_controller = new Admobe_Banner_controller();
     public BillingManager billingManager;
     public String SKU_Removed_ads ="com.nilapps.battery.alarm.removead";
 
@@ -43,70 +37,9 @@ public class Constant {
         return  (int) (level * 100 / (float)scale);
     }
 
-    public void loadBannerAd(final RelativeLayout livead , Context context , Activity activity) {
-        if (isAdshow) {
-            if (this.ads_controller.checkAddviewNull() && checkInternetConnection(context) && !constant.ismopubshow) {
-                this.ads_controller.add_init(activity);
-                livead.removeAllViews();
-                livead.addView(this.ads_controller.mAdView);
-                this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner() {
-
-                    @Override
-                    public void onAdFailedToLoad(int n) {
-                        livead.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onAdLoaded() {
-                        livead.setVisibility(View.VISIBLE);
-                    }
-                });
-                return;
-            }
-            if (checkInternetConnection(context)) {
-                if (this.ads_controller.isAdsshowingornot() && constant.ismopubshow) {
-                    livead.setVisibility(View.VISIBLE);
-                    livead.removeAllViews();
-                    if (this.ads_controller.mAdView.getParent() != null) {
-                        ((ViewGroup) this.ads_controller.mAdView.getParent()).removeView(this.ads_controller.mAdView);
-                    }
-                    livead.removeAllViews();
-                    livead.addView(this.ads_controller.mAdView);
-                    return;
-                }
-                livead.setVisibility(View.VISIBLE);
-                this.ads_controller.add_init(activity);
-                livead.removeAllViews();
-                livead.addView(this.ads_controller.mAdView);
-                this.ads_controller.setOnAdsShowingListner(new Admobe_Banner_controller.AdmobeAdsListner() {
-                    @Override
-                    public void onAdFailedToLoad(int n) {
-                        Log.e("Load", "Failed ");
-                        livead.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onAdLoaded() {
-                        livead.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-        }
-    }
-
     public boolean checkInternetConnection(Context context){
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
-    /*public void showDialogInternet(boolean allowBackButton, String title,
-                                   String message,Context mContext) {
-        Dialog dialogCommonSimple = new Dialog(mContext, R.style.DialogCustomTheme);
-        dialogCommonSimple.setContentView(R.layout.dialog_internet);
-        dialogCommonSimple.setCancelable(allowBackButton);
-        setLayout_DialogInternet(dialogCommonSimple, title, message,mContext);
-        dialogCommonSimple.setCanceledOnTouchOutside(false);
-        dialogCommonSimple.show();
-    }*/
 }

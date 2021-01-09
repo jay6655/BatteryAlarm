@@ -15,7 +15,7 @@ import android.widget.RemoteViews;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.receiver.BatteryStatusReceiver;
 import com.nilapps.batteryalarm.receiver.PowerConnctedReceiver;
 import com.nilapps.batteryalarm.templates.Constant;

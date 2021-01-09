@@ -10,9 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
+
 
 public class ActivateAlarmActivity extends AppCompatActivity {
 
@@ -39,12 +40,12 @@ public class ActivateAlarmActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
-        if (new SharedPreferencesApplication().getInAppDone(ActivateAlarmActivity.this)){
-            rel_live_ad.setVisibility(View.INVISIBLE);
-        }
-        else {
-            Constant.getInstance().loadBannerAd(rel_live_ad, ActivateAlarmActivity.this , ActivateAlarmActivity.this );
-        }
+//        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+//        if (new SharedPreferencesApplication().getInAppDone(ActivateAlarmActivity.this)){
+//            rel_live_ad.setVisibility(View.INVISIBLE);
+//        }
+//        else {
+//            Constant.getInstance().loadBannerAd(rel_live_ad, ActivateAlarmActivity.this , ActivateAlarmActivity.this );
+//        }
     }
 }

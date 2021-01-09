@@ -15,10 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.templates.BillingManager;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 import java.util.List;
 

@@ -21,8 +21,8 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.nilapps.batteryalarm.BuildConfig;
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.BuildConfig;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.templates.Constant;
 import com.nilapps.batteryalarm.util.SharedPreferencesApplication;
 import com.nilapps.lockscreen.EnterPinActivity;
@@ -109,14 +109,14 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             e.printStackTrace();
         }
 
-        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
+//        RelativeLayout rel_live_ad = findViewById(R.id.rel_live_ad);
         RelativeLayout rel_inapp = findViewById(R.id.rel_inapp);
         if (sh.getInAppDone(context)){
-            rel_live_ad.setVisibility(View.GONE);
+//            rel_live_ad.setVisibility(View.GONE);
             rel_inapp.setVisibility(View.GONE);
         }
         else {
-            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
+//            Constant.getInstance().loadBannerAd(rel_live_ad, context, activity);
             rel_inapp.setVisibility(View.VISIBLE);
         }
     }
@@ -224,7 +224,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, context.getResources().getString(R.string.app_name));
             String shareMessage= "\nLet me recommend you this application\n\n";
-            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=com.nilapps.battery.alarm.clock.smart" +"\n\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
             context.startActivity(Intent.createChooser(shareIntent, "choose one"));
         } catch(Exception e) {

@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 public class Congratulation_remove_ads extends Dialog {
     Context context;

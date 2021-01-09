@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 public class PinLockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

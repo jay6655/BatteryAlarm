@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 
 public class RateUsDialog extends Dialog {
 

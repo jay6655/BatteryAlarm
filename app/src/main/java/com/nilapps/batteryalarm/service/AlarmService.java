@@ -22,7 +22,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.activity.AlarmRingingActivity;
 import com.nilapps.batteryalarm.model.AlarmData;
 import com.nilapps.batteryalarm.templates.Constant;

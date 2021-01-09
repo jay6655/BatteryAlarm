@@ -16,7 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.nilapps.batteryalarm.R;
+import com.nilapps.battery.alarm.clock.smart.R;
 import com.nilapps.batteryalarm.activity.MainActivity;
 import com.nilapps.batteryalarm.model.AlarmData;
 import com.nilapps.batteryalarm.service.AlarmService;
