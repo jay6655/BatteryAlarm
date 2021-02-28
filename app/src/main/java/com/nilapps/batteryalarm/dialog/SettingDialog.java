@@ -127,18 +127,23 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Fingerprint API only available on from Android 6.0 (M)
             FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
-            if (!fingerprintManager.isHardwareDetected()) {
-                // Device doesn't support fingerprint authentication
-                rel_touchid.setVisibility(View.GONE);
-            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
-                // User hasn't enrolled any fingerprints to authenticate with
-                rel_touchid.setVisibility(View.VISIBLE);
-                if (sh.getUserFingurePrint(context)) {
-                    showFingureNotRegister();
+            if (fingerprintManager != null) {
+                if (!fingerprintManager.isHardwareDetected()) {
+                    // Device doesn't support fingerprint authentication
+                    rel_touchid.setVisibility(View.GONE);
+                } else if (!fingerprintManager.hasEnrolledFingerprints()) {
+                    // User hasn't enrolled any fingerprints to authenticate with
+                    rel_touchid.setVisibility(View.VISIBLE);
+                    if (sh.getUserFingurePrint(context)) {
+                        showFingureNotRegister();
+                    }
+                } else {
+                    // Everything is ready for fingerprint authentication
+                    rel_touchid.setVisibility(View.VISIBLE);
                 }
-            } else {
-                // Everything is ready for fingerprint authentication
-                rel_touchid.setVisibility(View.VISIBLE);
+            }
+            else {
+                rel_touchid.setVisibility(View.GONE);
             }
         }
         else {
